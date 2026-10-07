@@ -11,6 +11,8 @@ export default function HomePage() {
     { method: 'POST', path: '/api/searches', description: 'Effectue une recherche d&apos;entreprises' },
     { method: 'GET', path: '/api/searches/[id]', description: 'Obtient les résultats d&apos;une recherche' },
     { method: 'POST', path: '/api/extract-entities', description: 'Extrait les entités d&apos;un message' },
+    { method: 'POST', path: '/api/transcribe', description: 'Transcription audio batch (Mistral Voxtral)' },
+    { method: 'POST', path: '/api/transcribe/stream', description: 'Transcription audio en streaming SSE (Mistral Voxtral)' },
   ];
 
   return (
@@ -71,6 +73,29 @@ export default function HomePage() {
 {`curl -X POST http://localhost:3000/api/extract-entities \\
   -H "Content-Type: application/json" \\
   -d '{"message": "PME restauration à Lyon"}'`}
+      </pre>
+
+      <h3>Transcription audio (batch)</h3>
+      <pre style={{ background: '#f5f5f5', padding: '1rem', borderRadius: 8, overflow: 'auto' }}>
+{`curl -X POST http://localhost:3000/api/transcribe \\
+  -F "file=@audio.mp3" \\
+  -F "language=fr" \\
+  -F "timestamp_granularities=segment"`}
+      </pre>
+
+      <h3>Transcription audio (streaming SSE)</h3>
+      <pre style={{ background: '#f5f5f5', padding: '1rem', borderRadius: 8, overflow: 'auto' }}>
+{`curl -X POST http://localhost:3000/api/transcribe/stream \\
+  -F "file=@audio.webm" \\
+  -F "language=fr" \\
+  --no-buffer`}
+      </pre>
+
+      <h3>Transcription depuis une URL</h3>
+      <pre style={{ background: '#f5f5f5', padding: '1rem', borderRadius: 8, overflow: 'auto' }}>
+{`curl -X POST http://localhost:3000/api/transcribe \\
+  -H "Content-Type: application/json" \\
+  -d '{"file_url": "https://example.com/audio.mp3", "language": "fr"}'`}
       </pre>
 
       <footer style={{ marginTop: '3rem', color: '#666', fontSize: '0.9rem' }}>

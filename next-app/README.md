@@ -23,11 +23,16 @@ next-app/
 │   │   │   ├── route.ts        # POST /api/searches
 │   │   │   └── [id]/route.ts   # GET  /api/searches/:id
 │   │   └── extract-entities/route.ts  # POST /api/extract-entities
+│   │   ├── transcribe/
+│   │   │   ├── route.ts        # POST /api/transcribe (batch)
+│   │   │   └── stream/route.ts # POST /api/transcribe/stream (SSE)
 │   ├── lib/                    # Utilitaires et logique métier
 │   │   ├── types.ts            # Types TypeScript
 │   │   ├── utils.ts            # Fonctions utilitaires
 │   │   ├── supabase.ts         # Client Supabase
-│   │   └── data-loader.ts      # Chargement données + recherche
+│   │   ├── data-loader.ts      # Chargement données + recherche
+│   │   ├── mistral.ts          # Client Mistral AI (transcription)
+│   │   └── transcription-types.ts  # Types transcription audio
 │   ├── layout.tsx              # Layout racine
 │   └── page.tsx                # Page d'accueil (doc API)
 ├── data/
@@ -93,6 +98,7 @@ Ou connecter le dépôt GitHub à Vercel pour un déploiement automatique.
 Dans les paramètres du projet Vercel, ajouter :
 - `SUPABASE_URL`
 - `SUPABASE_KEY`
+- `MISTRAL_API_KEY` (pour la transcription audio)
 
 ## Exemples d'utilisation
 
@@ -125,6 +131,104 @@ curl -X POST https://your-app.vercel.app/api/extract-entities \
 ```bash
 curl https://your-app.vercel.app/api/health
 ```
+
+### Transcription audio (batch)
+
+```bash
+curl -X POST https://your-app.vercel.app/api/transcribe \
+  -F "file=@audio.mp3" \
+  -F "language=fr" \
+  -F "timestamp_granularities=segment"
+```
+
+Transcription depuis une URL :
+
+```bash
+curl -X POST https://your-app.vercel.app/api/transcribe \
+  -H "Content-Type: application/json" \
+  -d '{"file_url": "https://example.com/audio.mp3", "language": "fr"}'
+```
+
+### Transcription audio (streaming SSE)
+
+```bash
+curl -X POST https://your-app.vercel.app/api/transcribe/stream \
+  -F "file=@audio.webm" \
+  -F "language=fr" \
+  --no-buffer
+```
+
+Exemple client JavaScript pour le streaming :
+
+```javascript
+const formData = new FormData();
+formData.append('file', audioBlob, 'audio.webm');
+formData.append('language', 'fr');
+
+const response = await fetch('/api/transcribe/stream', {
+  method: 'POST',
+  body: formData,
+});
+
+const reader = response.body.getReader();
+const decoder = new TextDecoder();
+
+while (true) {
+  const { done, value } = await reader.read();
+  if (done) break;
+  
+  const events = decoder.decode(value).split('\n\n');
+  for (const event of events) {
+    if (event.startsWith('data: ')) {
+      const data = JSON.parse(event.slice(6));
+      console.log(data);
+      // { type: 'started', model: 'voxtral-mini-latest' }
+      // { type: 'delta', text: 'Bonjour...' }
+      // { type: 'segment', segment: { start: 0, end: 2.5, text: '...' } }
+      // { type: 'done', full_text: '...', usage: {...} }
+    }
+  }
+}
+```
+
+## Transcription audio (Mistral Voxtral)
+
+Deux endpoints sont disponibles pour la transcription speech-to-text :
+
+| Endpoint | Méthode | Description |
+|----------|---------|-------------|
+| `/api/transcribe` | POST | Transcription batch (retourne JSON complet) |
+| `/api/transcribe/stream` | POST | Transcription streaming (retourne SSE) |
+
+### Modèles supportés
+
+| Modèle | Usage |
+|--------|-------|
+| `voxtral-mini-latest` | Batch (défaut) - qualité optimale |
+| `voxtral-mini-2507` | Batch - version épinglée |
+| `voxtral-mini-transcribe-realtime-2602` | Temps réel (WebSocket, non exposé ici) |
+
+### Paramètres
+
+| Paramètre | Type | Description |
+|-----------|------|-------------|
+| `file` | File | Fichier audio (mp3, wav, m4a, ogg, flac, webm) |
+| `file_url` | string | URL du fichier audio (alternative à `file`) |
+| `model` | string | Modèle Voxtral à utiliser |
+| `language` | string | Code langue ISO 639-1 (ex: `fr`, `en`) |
+| `timestamp_granularities` | string[] | `segment` et/ou `word` pour les timestamps |
+| `diarize` | boolean | Activer la séparation des speakers |
+| `custom_terms` | string[] | Termes personnalisés (jusqu'à 100) |
+
+### Événements SSE (streaming)
+
+| Type | Payload | Description |
+|------|---------|-------------|
+| `started` | `{ model }` | Début de la transcription |
+| `delta` | `{ text, segment_index? }` | Fragment de texte |
+| `segment` | `{ segment: { start, end, text, speaker?, words? } }` | Segment complet |
+| `done` | `{ full_text, usage? }` | Transcription terminée |
+| `error` | `{ message }` | Erreur |
 
 ## Différences avec le backend FastAPI
 
