@@ -6,7 +6,7 @@
 
 ## Content Quality
 
-- [x] No implementation details (languages, frameworks, APIs) - Les notes techniques sont dans une section optionnelle séparée
+- [x] Les exigences fonctionnelles restent indépendantes de l'implémentation; la contrainte Next.js/Vercel demandée est isolée dans NF-032
 - [x] Focused on user value and business needs - La spec décrit les problèmes utilisateurs et les solutions
 - [x] Written for non-technical stakeholders - Le langage est accessible aux professionnels métiers
 - [x] All mandatory sections completed - Toutes les sections principales sont présentes

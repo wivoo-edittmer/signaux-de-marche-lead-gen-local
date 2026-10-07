@@ -17,7 +17,7 @@ Ce guide vous permet de valider rapidement que l'application B2Bmax fonctionne c
 ### Environnement de Développement
 
 - **Node.js**: 18+ (pour le frontend Next.js)
-- **Python**: 3.10+ (pour le backend FastAPI)
+- **Python**: 3.10+ (pour l'API backend FastAPI)
 - **Docker**: Optionnel (pour Celery/Redis)
 - **Git**: Pour cloner les repositories
 
@@ -35,7 +35,7 @@ Ce guide vous permet de valider rapidement que l'application B2Bmax fonctionne c
 
 ```
 b2bmax/
-├── frontend/          # Application Next.js
+├── frontend/          # Application Next.js déployée sur Vercel
 │   ├── src/
 │   │   ├── app/
 │   │   │   ├── (auth)/      # Pages d'authentification
@@ -101,7 +101,7 @@ git clone <b2bmax-repo-url>
 cd b2bmax
 ```
 
-### 2. Configurer le Backend
+### 2. Configurer le Backend FastAPI
 
 ```bash
 cd backend
@@ -168,6 +168,8 @@ NEXT_PUBLIC_API_URL=http://localhost:8000
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
+Les clés Mistral et Supabase privées restent dans l'environnement du backend FastAPI et ne doivent jamais être exposées via une variable `NEXT_PUBLIC_*`.
+
 ### 4. Configurer Supabase
 
 1. Créer un projet Supabase: https://supabase.com/dashboard
@@ -201,13 +203,13 @@ celery -A app.tasks beat --loglevel=info
 
 1. **Démarrer les services**:
    ```bash
-   # Terminal 1: Backend
-   cd backend
-   uvicorn main:app --reload --port 8000
-   
-   # Terminal 2: Frontend
-   cd ../frontend
-   npm run dev
+  # Terminal 1: Backend FastAPI
+  cd backend
+  uvicorn main:app --reload --port 8000
+
+  # Terminal 2: Frontend Next.js
+  cd frontend
+  npm run dev
    ```
 
 2. **Ouvrir l'application**: http://localhost:3000
@@ -722,46 +724,36 @@ Ouvrir la console du navigateur (F12) et vérifier:
 
 ## Environnement de Production
 
-### Déploiement
+### Déploiement sur Vercel
 
-1. **Frontend (Vercel)**:
+1. **Frontend Next.js (Vercel)**:
    ```bash
-   # Installer Vercel CLI
+  cd frontend
    npm install -g vercel
-   
-   # Déployer
+  vercel
    vercel --prod
    ```
 
-2. **Backend (Railway)**:
-   ```bash
-   # Installer Railway CLI
-   npm install -g @railway/cli
-   
-   # Déployer
-   railway up
-   ```
+2. **Backend FastAPI**:
+  Déployer séparément sur Railway ou Render et configurer ses variables secrètes (Supabase, Mistral, etc.) dans l'environnement du backend.
 
-3. **Base de données (Supabase)**:
-   - Déjà hébergée, juste configurer les variables d'environnement
+3. **Variables d'environnement Vercel**: Définir `NEXT_PUBLIC_API_URL` avec l'URL du backend FastAPI et configurer les variables publiques Supabase requises par le frontend.
+
+4. **Base de données (Supabase)**: Déjà hébergée; configurer les variables publiques côté Vercel et les clés privées côté backend. Ne jamais exposer la clé de service dans une variable `NEXT_PUBLIC_*`.
+
+Les tâches longues ou planifiées (par exemple Celery/Redis) nécessitent un worker ou service externe; elles ne doivent pas dépendre d'un processus persistant sur Vercel.
 
 ### Configuration Production
 
 **Variables d'environnement production**:
 ```env
-# Backend
-DEBUG=False
-SUPABASE_URL=https://your-project-ref.supabase.co
-SUPABASE_KEY=your_production_anon_key
-SUPABASE_SERVICE_KEY=your_production_service_key
-MISTRAL_API_KEY=your_production_mistral_key
-SECRET_KEY=your_production_jwt_secret
-SENDGRID_API_KEY=your_production_sendgrid_key
-
-# Frontend
+# Vercel frontend environment variables
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_production_anon_key
 NEXT_PUBLIC_API_URL=https://api.b2bmax.com
-NEXT_PUBLIC_APP_URL=https://b2bmax.com
 ```
+
+Configurer `MISTRAL_API_KEY`, `SUPABASE_SERVICE_KEY` et les autres secrets dans l'environnement du backend FastAPI, pas dans les variables `NEXT_PUBLIC_*` de Vercel.
 
 ---
 

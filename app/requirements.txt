@@ -1,0 +1,21 @@
+# B2Bmax MVP1 - Dépendances Python
+# Version: 1.0
+# Date: 2026-10-07
+
+# Supabase client
+supabase>=2.0.0
+
+# Gestion des variables d'environnement
+python-dotenv>=1.0.0
+
+# Pour le développement (optionnel)
+pandas>=2.0.0
+
+# Testing (optionnel)
+pytest>=7.0.0
+pytest-asyncio>=0.21.0
+httpx>=0.25.0
+
+# Type hints (optionnel pour le développement)
+mypy>=1.0.0
+types-python-date>=0.1.0

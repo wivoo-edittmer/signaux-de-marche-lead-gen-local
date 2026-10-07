@@ -8,15 +8,15 @@
 
 ## Décisions Techniques
 
-### 1. Stack Frontend: Next.js 14
+### 1. Frontend Web: Next.js 14+
 
-**Décision**: Utiliser Next.js 14 avec React et TypeScript
+**Décision**: Construire le frontend B2Bmax avec Next.js 14+ (App Router), React et TypeScript, puis le déployer sur Vercel.
 
 **Rationale**:
-- Next.js offre un excellent support pour les applications full-stack
+- Next.js fournit le framework et le routage nécessaires à l'interface web du MVP
 - Le App Router permet une bonne organisation du code
 - TypeScript améliore la maintenabilité et la détection d'erreurs
-- Intégration native avec Vercel pour le déploiement
+- Déploiement natif du frontend sur Vercel; l'API backend est hébergée séparément
 - Bonne communauté et écosystème de composants (shadcn/ui)
 - Support du SSR pour l'SEO et le charment initial des données
 
@@ -25,13 +25,13 @@
 - **SvelteKit**: Très bon, mais écosystème plus petit et moins de ressources
 - **Remix**: Excellent pour le full-stack, mais courbe d'apprentissage plus raide
 
-**Recommandation**: Next.js 14 est le choix optimal pour ce projet.
+**Recommandation**: Next.js 14+ est le framework requis pour le frontend; utiliser Vercel comme cible de déploiement.
 
 ---
 
-### 2. Stack Backend: FastAPI (Python)
+### 2. Backend API: FastAPI (Python)
 
-**Décision**: Utiliser FastAPI pour l'API backend
+**Décision**: Utiliser FastAPI pour l'API backend et les traitements Python. L'API est déployée séparément du frontend Next.js, par exemple sur Railway ou Render.
 
 **Rationale**:
 - Déjà partiellement implémenté dans le projet existant (`insee-api/`)
@@ -46,7 +46,7 @@
 - **Django**: Plus lourd, mais très mature
 - **Flask**: Plus simple, mais moins de features modernes
 
-**Recommandation**: FastAPI est le choix optimal, surtout avec l'existant.
+**Recommandation**: Réutiliser et étendre l'API FastAPI existante; le frontend Next.js l'appelle via une URL configurée.
 
 ---
 
@@ -160,17 +160,18 @@
 
 ---
 
-### 8. Déploiement: Vercel + Railway
+### 8. Déploiement: Vercel + Railway/Render
 
 **Décision**:
 - **Frontend (Next.js)**: Déployer sur Vercel
-- **Backend (FastAPI)**: Déployer sur Railway ou Render
+- **Backend (FastAPI)**: Déployer séparément sur Railway ou Render
 - **Base de données (Supabase)**: Utiliser Supabase Cloud
+- **Tâches longues/planifiées**: Exécuter dans le backend ou un worker externe, pas dans le frontend Vercel
 
 **Rationale**:
 - **Vercel**: Optimisé pour Next.js, déploiement continu, très performant
-- **Railway**: Excellente intégration avec Python, Postgres, Redis
-- **Render**: Alternative à Railway, très simple à utiliser
+- **Railway**: Hébergement simple pour FastAPI et Redis
+- **Render**: Alternative à Railway pour l'API backend
 - **Supabase**: Solution managée, pas besoin de déployer la base
 
 **Alternatives considérées**:
@@ -190,20 +191,10 @@ Le projet existant contient:
 
 **Stratégie d'Intégration**:
 
-1. **Réutiliser l'API existante** comme service backend principal
-2. **Étendre l'API** avec de nouveaux endpoints pour B2Bmax:
-   - `/chat` - Gestion des conversations
-   - `/agents` - CRUD pour les agents de prospection
-   - `/subscriptions` - CRUD pour les abonnements
-   - `/notifications` - Gestion des notifications
-   - `/profiles` - Gestion des profils utilisateurs
-
-3. **Adapter l'API** pour:
-   - Gérer l'authentification (JWT)
-   - Isoler les données par utilisateur
-   - Supporter les WebSockets pour le chat en temps réel
-
-4. **Créer un frontend Next.js** qui consomme cette API
+1. **Réutiliser l'API existante** comme backend principal et l'étendre aux besoins B2Bmax
+2. **Construire le frontend Next.js** et le connecter à l'API FastAPI via son URL de déploiement
+3. **Garder les secrets Mistral et Supabase côté serveur**; ne pas exposer de clé secrète avec le préfixe `NEXT_PUBLIC_`
+4. **Exécuter les tâches longues** dans le backend ou un worker externe
 
 ### Fichier `openapi-insee.yml`
 
@@ -387,7 +378,7 @@ mkdir b2bmax-frontend
 cd b2bmax-frontend
 npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias "@/*"
 
-# Backend
+# Backend API FastAPI
 git clone <insee-api-repo> b2bmax-backend
 cd b2bmax-backend
 pip install -r requirements.txt
@@ -400,7 +391,6 @@ pip install -r requirements.txt
 # Créer un fichier .env.local dans le frontend:
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-NEXT_PUBLIC_MISTRAL_API_KEY=your_mistral_key
 
 # Créer un fichier .env dans le backend:
 SUPABASE_URL=your_supabase_url

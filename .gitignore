@@ -54,3 +54,7 @@ logs/
 
 # Cache
 .cache/
+.env
+data-full
+.env
+.DS_Store
