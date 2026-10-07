@@ -1,0 +1,1080 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* Mistral Charter Colors */
+  --brand-primary: #FF7000;
+  --brand-primary-light: #F5D90A;
+  --brand-primary-medium: #FAA42B;
+  --brand-primary-dark: #FF9E00;
+  
+  --success-50: #A3E635;
+  --success-100: #65C547;
+  --success-500: #22C55E;
+  --success-700: #16A34A;
+  --success-900: #15803D;
+  
+  --warning-50: #F5D90A;
+  --warning-100: #FAA42B;
+  --warning-500: #FF9E00;
+  --warning-700: #FF7000;
+  
+  --error-500: #DC2626;
+}
+
+/* Base Styles */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #FFFFFF;
+  color: #1F2937;
+  line-height: 1.5;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F3F4F6;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D1D5DB;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9CA3AF;
+}
+
+/* Focus Styles */
+:focus-visible {
+  outline: 2px solid #FF7000;
+  outline-offset: 2px;
+}
+
+/* Selection */
+::selection {
+  background-color: #F5D90A;
+  color: #1F2937;
+}
+
+/* Animations */
+@keyframes slideUp {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Utility Classes */
+@layer utilities {
+  .text-brand-primary {
+    color: var(--brand-primary);
+  }
+  
+  .bg-brand-primary {
+    background-color: var(--brand-primary);
+  }
+  
+  .bg-brand-gradient {
+    background: var(--brand-gradient);
+  }
+  
+  .bg-success-gradient {
+    background: var(--success-gradient);
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.5s ease-out;
+  }
+  
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out;
+  }
+  
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+}
+
+/* Card Styles */
+.card {
+  @apply bg-white rounded-xl shadow-card p-6;
+}
+
+.card-hover {
+  @apply transition-all duration-200 hover:shadow-lg hover:-translate-y-1;
+}
+
+/* Button Variants */
+.btn {
+  @apply inline-flex items-center justify-center px-5 py-2.5 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+.btn-primary {
+  @apply btn bg-brand-primary text-white hover:bg-orange-600 focus:ring-orange-200;
+}
+
+.btn-secondary {
+  @apply btn bg-gray-100 text-gray-800 hover:bg-gray-200 focus:ring-gray-200;
+}
+
+.btn-success {
+  @apply btn bg-success-700 text-white hover:bg-green-600 focus:ring-green-200;
+}
+
+.btn-outline {
+  @apply btn border-2 border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white focus:ring-brand-primary;
+}
+
+/* Input Styles */
+.input {
+  @apply w-full px-4 py-2.5 rounded-lg border border-gray-200 bg-white text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent;
+}
+
+/* Badge Variants */
+.badge {
+  @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium;
+}
+
+.badge-success {
+  @apply badge bg-success-100 text-success-700;
+}
+
+.badge-warning {
+  @apply badge bg-warning-100 text-warning-700;
+}
+
+.badge-neutral {
+  @apply badge bg-gray-100 text-gray-600;
+}
+
+.badge-primary {
+  @apply badge bg-brand-primary bg-opacity-10 text-brand-primary;
+}
+
+/* Gradient Text */
+.text-gradient {
+  @apply bg-brand-gradient bg-clip-text text-transparent;
+}
+
+/* ============================================
+   LANGUAGE TOGGLE
+   Bilingual FR/EN switcher
+   ============================================ */
+
+.lang-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 2px solid #1F2937;
+  background: #FFF;
+  color: #1F2937;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.lang-toggle-btn:hover {
+  background: #1F2937;
+  color: #FFF;
+}
+
+.lang-toggle-btn:active {
+  transform: scale(0.96);
+}
+
+.lang-toggle-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lang-toggle-label {
+  letter-spacing: 0.5px;
+}
+
+/* --- Retro Mode: Language Toggle --- */
+body.retro-mode .lang-toggle-btn {
+  border: 2px solid #FF7000;
+  background: #FFF;
+  color: #FF7000;
+  font-family: var(--font-pixel, 'Press Start 2P', monospace);
+  font-size: 10px;
+  border-radius: 0;
+  box-shadow: 3px 3px 0 #FF7000;
+  transition: none;
+}
+
+body.retro-mode .lang-toggle-btn:hover {
+  background: #FF7000;
+  color: #FFF;
+  box-shadow: 3px 3px 0 #F5D90A;
+}
+
+body.retro-mode .lang-toggle-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 #FF7000;
+}
+
+/* ============================================
+   80's RETRO MODE
+   Synthwave aesthetic — chrome text, neon
+   grid, VHS tracking, sunset gradients,
+   and all that outrun goodness
+   ============================================ */
+
+/* --- 80's synthwave color palette --- */
+body.retro-mode {
+  --r80-bg: #0D0221;
+  --r80-bg-alt: #1A0B2E;
+  --r80-surface: #F0F0F5;
+  --r80-surface-alt: #E0DDE8;
+  --r80-magenta: #FF1493;
+  --r80-cyan: #00FFFF;
+  --r80-sunset: #FF6B35;
+  --r80-purple: #8A2BE2;
+  --r80-chrome: #C0C8D8;
+  --r80-ink: #0D0221;
+  --r80-ink-soft: #3D2B5C;
+}
+
+/* --- Retro Toggle Button: chrome 80s style --- */
+.retro-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: 3px solid #0D0221;
+  background: linear-gradient(180deg, #E8ECF4 0%, #B8C0D0 40%, #8A92A8 60%, #D0D8E8 100%);
+  color: #0D0221;
+  font-family: var(--font-pixel, 'Press Start 2P', monospace);
+  font-size: 9px;
+  line-height: 1;
+  cursor: pointer;
+  image-rendering: pixelated;
+  transition: none;
+  box-shadow:
+    0 4px 0 #0D0221,
+    0 6px 0 rgba(0, 0, 0, 0.4),
+    0 0 12px rgba(255, 20, 147, 0.3),
+    inset 0 2px 0 rgba(255, 255, 255, 0.6);
+  user-select: none;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
+  position: relative;
+  white-space: nowrap;
+}
+
+.retro-toggle-btn::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 3px;
+  right: 3px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.7);
+  pointer-events: none;
+}
+
+.retro-toggle-btn:hover {
+  background: linear-gradient(180deg, #F0F4FC 0%, #C8D0E0 40%, #9AA2B8 60%, #E0E8F4 100%);
+  box-shadow:
+    0 4px 0 #0D0221,
+    0 6px 0 rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(255, 20, 147, 0.6),
+    inset 0 2px 0 rgba(255, 255, 255, 0.7);
+}
+
+.retro-toggle-btn:active {
+  transform: translateY(4px);
+  box-shadow:
+    0 0 0 #0D0221,
+    0 2px 0 rgba(0, 0, 0, 0.4),
+    0 0 8px rgba(255, 20, 147, 0.3),
+    inset 0 2px 0 rgba(255, 255, 255, 0.4);
+}
+
+.retro-toggle-btn[aria-pressed="true"] {
+  background: linear-gradient(180deg, #FF1493 0%, #CC0A74 40%, #990855 60%, #FF3DA8 100%);
+  color: #FFFFFF;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+  box-shadow:
+    0 4px 0 #0D0221,
+    0 6px 0 rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(255, 20, 147, 0.8),
+    inset 0 2px 0 rgba(255, 255, 255, 0.3);
+}
+
+.retro-toggle-btn[aria-pressed="true"]::after {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.retro-toggle-btn[aria-pressed="true"]:hover {
+  background: linear-gradient(180deg, #FF3DA8 0%, #E01A84 40%, #B00A65 60%, #FF5DB8 100%);
+  box-shadow:
+    0 4px 0 #0D0221,
+    0 6px 0 rgba(0, 0, 0, 0.4),
+    0 0 28px rgba(255, 20, 147, 1),
+    inset 0 2px 0 rgba(255, 255, 255, 0.35);
+}
+
+.retro-toggle-btn[aria-pressed="true"]:active {
+  transform: translateY(4px);
+  box-shadow:
+    0 0 0 #0D0221,
+    0 2px 0 rgba(0, 0, 0, 0.4),
+    0 0 12px rgba(255, 20, 147, 0.5),
+    inset 0 2px 0 rgba(255, 255, 255, 0.2);
+}
+
+.retro-toggle-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.retro-toggle-label {
+  letter-spacing: 1px;
+}
+
+/* --- CRT Power-On Animation --- */
+@keyframes retro-power-on {
+  0% {
+    transform: scaleY(0.005) scaleX(1);
+    filter: brightness(4);
+  }
+  30% {
+    transform: scaleY(0.005) scaleX(1);
+    filter: brightness(4);
+  }
+  50% {
+    transform: scaleY(0.6) scaleX(1);
+    filter: brightness(2);
+  }
+  70% {
+    transform: scaleY(1) scaleX(1);
+    filter: brightness(1.3);
+  }
+  85% {
+    filter: brightness(0.9);
+  }
+  100% {
+    transform: scaleY(1) scaleX(1);
+    filter: brightness(1);
+  }
+}
+
+body.retro-mode.retro-powering-on {
+  animation: retro-power-on 0.5s ease-out;
+  transform-origin: center center;
+}
+
+/* --- VHS Scanlines + Tracking Noise --- */
+body.retro-mode::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  background:
+    /* Horizontal scanlines */
+    repeating-linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0) 0px,
+      rgba(0, 0, 0, 0) 2px,
+      rgba(0, 0, 0, 0.1) 2px,
+      rgba(0, 0, 0, 0.1) 3px
+    ),
+    /* RGB chromatic aberration */
+    repeating-linear-gradient(
+      to right,
+      rgba(255, 0, 100, 0.02) 0px,
+      rgba(0, 255, 255, 0.02) 1px,
+      rgba(0, 100, 255, 0.02) 2px
+    );
+  animation: retro-scanline 4s linear infinite;
+}
+
+/* --- VHS tracking bar (occasional horizontal noise band) --- */
+@keyframes retro-tracking {
+  0%, 92% { transform: translateY(-100%); opacity: 0; }
+  93% { opacity: 0.15; }
+  96% { opacity: 0.08; }
+  97%, 100% { transform: translateY(100vh); opacity: 0; }
+}
+
+/* --- CRT vignette + screen curvature --- */
+body.retro-mode::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+  background:
+    radial-gradient(
+      ellipse at center,
+      rgba(0, 0, 0, 0) 45%,
+      rgba(13, 2, 33, 0.15) 80%,
+      rgba(13, 2, 33, 0.4) 100%
+    );
+  box-shadow: inset 0 0 150px rgba(13, 2, 33, 0.2);
+}
+
+@keyframes retro-scanline {
+  0% { background-position: 0 0, 0 0; }
+  100% { background-position: 0 10px, 0 0; }
+}
+
+@keyframes retro-flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.98; }
+  52% { opacity: 1; }
+  54% { opacity: 0.99; }
+  56% { opacity: 1; }
+}
+
+/* --- Retro Mode: Base — deep purple-black with synthwave grid --- */
+body.retro-mode {
+  font-family: var(--font-pixel, 'Press Start 2P', monospace) !important;
+  background-color: #0D0221 !important;
+  background-image:
+    /* Synthwave perspective grid */
+    linear-gradient(rgba(255, 20, 147, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 20, 147, 0.04) 1px, transparent 1px),
+    /* Neon radial glows */
+    radial-gradient(circle at 20% 15%, rgba(255, 20, 147, 0.08) 0%, transparent 35%),
+    radial-gradient(circle at 80% 85%, rgba(0, 255, 255, 0.08) 0%, transparent 35%),
+    radial-gradient(circle at 50% 50%, rgba(138, 43, 226, 0.05) 0%, transparent 50%);
+  background-size: 40px 40px, 40px 40px, 100% 100%, 100% 100%, 100% 100%;
+  color: #E8E4F0 !important;
+  line-height: 1.8 !important;
+  animation: retro-flicker 6s ease-in-out infinite;
+  -webkit-font-smoothing: none !important;
+  -moz-osx-font-smoothing: unset !important;
+}
+
+body.retro-mode * {
+  border-radius: 0 !important;
+  transition: none !important;
+  animation-duration: 0s !important;
+  animation-iteration-count: 1 !important;
+  scroll-behavior: auto !important;
+  font-family: var(--font-pixel, 'Press Start 2P', monospace) !important;
+  text-rendering: geometricPrecision;
+  letter-spacing: 0 !important;
+}
+
+/* --- Pixelated images --- */
+body.retro-mode img,
+body.retro-mode svg,
+body.retro-mode canvas,
+body.retro-mode video {
+  image-rendering: pixelated !important;
+  image-rendering: crisp-edges !important;
+}
+
+/* --- Headings: chrome text with neon glow --- */
+body.retro-mode h1,
+body.retro-mode h2,
+body.retro-mode h3,
+body.retro-mode h4,
+body.retro-mode h5,
+body.retro-mode h6 {
+  line-height: 1.6 !important;
+  color: #F0F0F5 !important;
+  text-shadow:
+    0 0 4px rgba(255, 20, 147, 0.6),
+    0 0 12px rgba(255, 20, 147, 0.3),
+    3px 3px 0 #0D0221,
+    4px 4px 0 rgba(0, 255, 255, 0.3);
+}
+
+body.retro-mode h1 { font-size: 1.6rem !important; }
+body.retro-mode h2 { font-size: 1.3rem !important; }
+body.retro-mode h3 { font-size: 1.1rem !important; }
+body.retro-mode h4 { font-size: 0.95rem !important; }
+
+/* --- Paragraphs --- */
+body.retro-mode p {
+  font-size: 11px !important;
+  line-height: 2 !important;
+  color: #B8B0CC !important;
+}
+
+/* --- Links: cyan neon --- */
+body.retro-mode a {
+  text-decoration: none !important;
+  border-bottom: 2px solid transparent;
+  color: #00FFFF !important;
+}
+
+body.retro-mode a:hover {
+  color: #FF1493 !important;
+  border-bottom-color: #FF1493 !important;
+  text-shadow: 0 0 10px rgba(255, 20, 147, 0.6);
+}
+
+/* --- Header: dark bar with magenta-cyan double stripe --- */
+body.retro-mode header {
+  background: #1A0B2E !important;
+  border-bottom: 4px solid #FF1493 !important;
+  box-shadow:
+    0 4px 0 #00FFFF,
+    0 8px 30px rgba(0, 0, 0, 0.6);
+}
+
+body.retro-mode header a,
+body.retro-mode header span {
+  color: #FF6B35 !important;
+  font-size: 10px !important;
+}
+
+body.retro-mode header a:hover {
+  color: #00FFFF !important;
+  border-bottom-color: #00FFFF !important;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+}
+
+/* --- Footer: deep dark with purple top border --- */
+body.retro-mode footer {
+  background: #08011A !important;
+  border-top: 4px solid #8A2BE2 !important;
+  box-shadow: 0 -4px 0 rgba(138, 43, 226, 0.3);
+}
+
+body.retro-mode footer h4 {
+  color: #FF1493 !important;
+  font-size: 10px !important;
+  text-shadow: 0 0 8px rgba(255, 20, 147, 0.4);
+}
+
+body.retro-mode footer a,
+body.retro-mode footer p,
+body.retro-mode footer li {
+  color: #7A6B9A !important;
+  font-size: 9px !important;
+}
+
+body.retro-mode footer a:hover {
+  color: #FF6B35 !important;
+}
+
+/* --- Cards: dark surface with magenta-cyan neon shadow --- */
+body.retro-mode .card,
+body.retro-mode [class*="rounded-xl"],
+body.retro-mode [class*="rounded-2xl"],
+body.retro-mode [class*="rounded-3xl"],
+body.retro-mode [class*="rounded-lg"] {
+  border: 3px solid #E8E4F0 !important;
+  box-shadow:
+    6px 6px 0 #FF1493,
+    12px 12px 0 rgba(0, 255, 255, 0.25) !important;
+  background: #F0F0F5 !important;
+  color: #0D0221 !important;
+}
+
+body.retro-mode [class*="shadow-card"],
+body.retro-mode [class*="shadow-lg"],
+body.retro-mode [class*="shadow-xl"],
+body.retro-mode [class*="shadow-soft"] {
+  box-shadow:
+    6px 6px 0 #FF1493,
+    12px 12px 0 rgba(0, 255, 255, 0.25) !important;
+}
+
+/* --- Buttons: chrome 80s arcade style --- */
+body.retro-mode .btn,
+body.retro-mode button[type="submit"],
+body.retro-mode button:not(.retro-toggle-btn) {
+  border: 3px solid #0D0221 !important;
+  box-shadow:
+    0 5px 0 #0D0221,
+    0 8px 0 rgba(0, 0, 0, 0.5),
+    0 0 12px rgba(255, 20, 147, 0.3) !important;
+  font-size: 10px !important;
+  padding: 12px 20px !important;
+  text-transform: uppercase;
+  background: linear-gradient(180deg, #FF1493 0%, #CC0A74 100%) !important;
+  color: #FFFFFF !important;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+}
+
+body.retro-mode .btn:active,
+body.retro-mode button:not(.retro-toggle-btn):active {
+  transform: translateY(5px) !important;
+  box-shadow:
+    0 0 0 #0D0221,
+    0 3px 0 rgba(0, 0, 0, 0.5) !important;
+}
+
+body.retro-mode .btn-primary,
+body.retro-mode [class*="bg-brand-primary"] {
+  background: linear-gradient(180deg, #FF6B35 0%, #E04A15 100%) !important;
+  color: #FFFFFF !important;
+  border-color: #0D0221 !important;
+  box-shadow:
+    0 5px 0 #0D0221,
+    0 8px 0 rgba(0, 0, 0, 0.5),
+    0 0 16px rgba(255, 107, 53, 0.5) !important;
+}
+
+body.retro-mode .btn-primary:hover,
+body.retro-mode [class*="bg-brand-primary"]:hover {
+  background: linear-gradient(180deg, #FF8B55 0%, #FF6B35 100%) !important;
+  box-shadow:
+    0 5px 0 #0D0221,
+    0 8px 0 rgba(0, 0, 0, 0.5),
+    0 0 24px rgba(255, 107, 53, 0.7) !important;
+}
+
+body.retro-mode .btn-outline {
+  background: transparent !important;
+  color: #00FFFF !important;
+  border: 3px solid #00FFFF !important;
+  box-shadow:
+    0 5px 0 rgba(0, 255, 255, 0.3),
+    0 8px 0 rgba(0, 0, 0, 0.4) !important;
+  text-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+}
+
+body.retro-mode .btn-outline:hover {
+  background: #00FFFF !important;
+  color: #0D0221 !important;
+  text-shadow: none !important;
+  box-shadow:
+    0 5px 0 #0D0221,
+    0 8px 0 rgba(0, 0, 0, 0.4),
+    0 0 24px rgba(0, 255, 255, 0.7) !important;
+}
+
+body.retro-mode .btn-secondary {
+  background: linear-gradient(180deg, #8A2BE2 0%, #6A1BB2 100%) !important;
+  color: #FFFFFF !important;
+  box-shadow:
+    0 5px 0 #0D0221,
+    0 8px 0 rgba(0, 0, 0, 0.5),
+    0 0 16px rgba(138, 43, 226, 0.5) !important;
+}
+
+/* --- Inputs: dark terminal with cyan border --- */
+body.retro-mode input,
+body.retro-mode select,
+body.retro-mode textarea,
+body.retro-mode .input {
+  border: 3px solid #00FFFF !important;
+  box-shadow:
+    inset 3px 3px 0 rgba(0, 255, 255, 0.06),
+    0 0 0 1px rgba(0, 255, 255, 0.1) !important;
+  font-size: 10px !important;
+  padding: 12px 14px !important;
+  background: #1A0B2E !important;
+  color: #E8E4F0 !important;
+}
+
+body.retro-mode input::placeholder,
+body.retro-mode textarea::placeholder {
+  color: #5A4A7A !important;
+}
+
+body.retro-mode input:focus,
+body.retro-mode select:focus,
+body.retro-mode textarea:focus {
+  outline: none !important;
+  border-color: #FF1493 !important;
+  box-shadow:
+    inset 3px 3px 0 rgba(255, 20, 147, 0.06),
+    0 0 0 3px rgba(255, 20, 147, 0.25),
+    0 0 20px rgba(255, 20, 147, 0.4) !important;
+}
+
+/* --- Badges: purple neon --- */
+body.retro-mode .badge,
+body.retro-mode [class*="rounded-full"] {
+  border: 2px solid #0D0221 !important;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.5) !important;
+  font-size: 8px !important;
+  padding: 6px 12px !important;
+  background: #8A2BE2 !important;
+  color: #FFFFFF !important;
+}
+
+/* --- Progress bars --- */
+body.retro-mode [class*="rounded-full"][class*="bg-gray-200"],
+body.retro-mode [class*="bg-gray-200"][class*="h-1.5"],
+body.retro-mode [class*="bg-gray-200"][class*="h-2"] {
+  border: 2px solid #E8E4F0 !important;
+  background: #1A0B2E !important;
+}
+
+body.retro-mode [class*="bg-brand-primary"][class*="h-1.5"],
+body.retro-mode [class*="bg-brand-primary"][class*="h-2"],
+body.retro-mode [class*="bg-success-500"][class*="h-1.5"],
+body.retro-mode [class*="bg-success-500"][class*="h-2"] {
+  box-shadow: none !important;
+  background: linear-gradient(90deg, #FF1493, #FF6B35) !important;
+}
+
+/* --- Backgrounds: dark 80s surfaces --- */
+body.retro-mode [class*="bg-gray-50"] {
+  background: #0D0221 !important;
+}
+
+body.retro-mode [class*="bg-white"] {
+  background: #F0F0F5 !important;
+  color: #0D0221 !important;
+}
+
+body.retro-mode [class*="bg-gray-100"] {
+  background: #1A0B2E !important;
+}
+
+/* --- Text colors --- */
+body.retro-mode [class*="text-gray-900"] {
+  color: #E8E4F0 !important;
+}
+
+body.retro-mode [class*="text-gray-600"],
+body.retro-mode [class*="text-gray-500"],
+body.retro-mode [class*="text-gray-400"] {
+  color: #7A6B9A !important;
+}
+
+body.retro-mode [class*="text-brand-primary"] {
+  color: #FF6B35 !important;
+  text-shadow: 0 0 10px rgba(255, 107, 53, 0.5);
+}
+
+body.retro-mode [class*="text-success-700"] {
+  color: #00FFFF !important;
+  text-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
+}
+
+body.retro-mode [class*="text-white"] {
+  color: #F0F0F5 !important;
+}
+
+/* --- Gradient backgrounds become synthwave sunset --- */
+body.retro-mode [class*="bg-gradient-to-r"],
+body.retro-mode [class*="bg-gradient-to-br"],
+body.retro-mode [class*="bg-brand-gradient"],
+body.retro-mode [class*="bg-success-gradient"] {
+  background: linear-gradient(90deg, #FF1493 0%, #FF6B35 50%, #8A2BE2 100%) !important;
+}
+
+body.retro-mode [class*="from-brand-primary"] {
+  background: linear-gradient(90deg, #FF1493 0%, #FF6B35 100%) !important;
+}
+
+/* --- Hero section overlay: synthwave grid pattern --- */
+body.retro-mode [class*="bg-brand-gradient"][class*="opacity-10"] {
+  background: transparent !important;
+  background-image:
+    linear-gradient(rgba(255, 20, 147, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 255, 0.08) 1px, transparent 1px) !important;
+  background-size: 32px 32px, 32px 32px !important;
+}
+
+/* --- Borders --- */
+body.retro-mode [class*="border-gray-100"],
+body.retro-mode [class*="border-gray-200"] {
+  border-color: #3D2B5C !important;
+}
+
+body.retro-mode [class*="border-t"] {
+  border-top: 3px solid #3D2B5C !important;
+}
+
+body.retro-mode [class*="border-b"] {
+  border-bottom: 3px solid #3D2B5C !important;
+}
+
+/* --- Divide --- */
+body.retro-mode [class*="divide-x"] > * + * {
+  border-left: 3px solid #3D2B5C !important;
+}
+
+/* --- Chat bubbles --- */
+body.retro-mode [class*="rounded-2xl"][class*="bg-brand-primary"] {
+  border: 3px solid #0D0221 !important;
+  box-shadow: 5px 5px 0 #00FFFF !important;
+  background: linear-gradient(135deg, #FF1493, #FF6B35) !important;
+}
+
+body.retro-mode [class*="rounded-2xl"][class*="bg-gray-100"] {
+  border: 3px solid #0D0221 !important;
+  box-shadow: 5px 5px 0 #8A2BE2 !important;
+  background: #1A0B2E !important;
+  color: #E8E4F0 !important;
+}
+
+/* --- Tables: magenta header, striped dark rows --- */
+body.retro-mode table {
+  border: 3px solid #E8E4F0 !important;
+  background: #1A0B2E !important;
+}
+
+body.retro-mode th {
+  background: linear-gradient(180deg, #FF1493, #CC0A74) !important;
+  color: #FFFFFF !important;
+  font-size: 9px !important;
+  padding: 10px !important;
+  border: 2px solid #0D0221 !important;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4);
+}
+
+body.retro-mode td {
+  border: 2px solid #3D2B5C !important;
+  padding: 10px !important;
+  font-size: 9px !important;
+  color: #B8B0CC !important;
+}
+
+body.retro-mode tr:nth-child(even) td {
+  background: #1A0B2E !important;
+}
+
+body.retro-mode tr:nth-child(odd) td {
+  background: #140826 !important;
+}
+
+/* --- Scrollbar: magenta on dark --- */
+body.retro-mode ::-webkit-scrollbar {
+  width: 14px;
+  height: 14px;
+}
+
+body.retro-mode ::-webkit-scrollbar-track {
+  background: #0D0221;
+  border-left: 2px solid #3D2B5C;
+}
+
+body.retro-mode ::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #FF1493, #CC0A74);
+  border: 3px solid #0D0221;
+  box-shadow: inset -2px -2px 0 rgba(0, 0, 0, 0.3);
+}
+
+body.retro-mode ::-webkit-scrollbar-thumb:hover {
+  background: #00FFFF;
+}
+
+/* --- Selection: magenta --- */
+body.retro-mode ::selection {
+  background: #FF1493 !important;
+  color: #FFFFFF !important;
+}
+
+/* --- Focus: cyan neon outline --- */
+body.retro-mode :focus-visible {
+  outline: 3px solid #00FFFF !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.5) !important;
+}
+
+/* --- Spinner: chunky pixel rotation --- */
+body.retro-mode [class*="animate-spin"] {
+  animation: retro-spin 1s steps(8) infinite !important;
+}
+
+@keyframes retro-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* --- Loading dots: bouncy pixels --- */
+body.retro-mode [class*="animate-bounce"] {
+  animation: retro-bounce 0.6s steps(2) infinite !important;
+}
+
+@keyframes retro-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+/* --- Pulse: neon blink --- */
+body.retro-mode [class*="animate-pulse"] {
+  animation: retro-blink 1s steps(2) infinite !important;
+}
+
+@keyframes retro-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* --- Hover lift: neon pixel shift --- */
+body.retro-mode [class*="hover:-translate-y-1"]:hover,
+body.retro-mode [class*="hover:shadow-lg"]:hover {
+  transform: translate(-3px, -3px) !important;
+  box-shadow:
+    9px 9px 0 #FF1493,
+    15px 15px 0 rgba(0, 255, 255, 0.25) !important;
+}
+
+/* --- Grid pattern background for hero --- */
+body.retro-mode [class*="bg-[url"] {
+  opacity: 1 !important;
+}
+
+/* --- Icon containers: cyan bordered with magenta shadow --- */
+body.retro-mode [class*="rounded-xl"][class*="flex"][class*="items-center"] {
+  border: 3px solid #00FFFF !important;
+  box-shadow:
+    4px 4px 0 #FF1493,
+    8px 8px 0 rgba(138, 43, 226, 0.3) !important;
+  background: #1A0B2E !important;
+}
+
+/* --- Success/Warning badges: cyan and sunset --- */
+body.retro-mode [class*="bg-success-50"],
+body.retro-mode [class*="bg-success-100"] {
+  background: #00FFFF !important;
+  color: #0D0221 !important;
+  border-color: #0D0221 !important;
+}
+
+body.retro-mode [class*="bg-warning-50"],
+body.retro-mode [class*="bg-warning-100"] {
+  background: #FF6B35 !important;
+  color: #FFFFFF !important;
+  border-color: #0D0221 !important;
+}
+
+/* --- CTA section: synthwave bordered box --- */
+body.retro-mode [class*="bg-gray-50"][class*="rounded-3xl"] {
+  background: #1A0B2E !important;
+  border: 4px solid #FF1493 !important;
+  box-shadow:
+    8px 8px 0 #00FFFF,
+    16px 16px 0 rgba(138, 43, 226, 0.3) !important;
+  color: #E8E4F0 !important;
+}
+
+/* --- Small text sizes --- */
+body.retro-mode [class*="text-xs"] {
+  font-size: 8px !important;
+}
+
+body.retro-mode [class*="text-sm"] {
+  font-size: 9px !important;
+}
+
+body.retro-mode [class*="text-lg"] {
+  font-size: 12px !important;
+}
+
+body.retro-mode [class*="text-xl"] {
+  font-size: 13px !important;
+}
+
+body.retro-mode [class*="text-2xl"] {
+  font-size: 16px !important;
+}
+
+body.retro-mode [class*="text-3xl"] {
+  font-size: 20px !important;
+}
+
+body.retro-mode [class*="text-4xl"] {
+  font-size: 24px !important;
+}
+
+body.retro-mode [class*="text-5xl"] {
+  font-size: 28px !important;
+}
+
+body.retro-mode [class*="text-6xl"] {
+  font-size: 32px !important;
+}
+
+/* --- Font weight: pixel fonts only have one weight --- */
+body.retro-mode [class*="font-bold"],
+body.retro-mode [class*="font-semibold"],
+body.retro-mode [class*="font-medium"] {
+  font-weight: 400 !important;
+  text-shadow: 0 0 6px rgba(255, 20, 147, 0.3);
+}
+
+/* --- Disabled state --- */
+body.retro-mode button:disabled,
+body.retro-mode input:disabled {
+  opacity: 0.4 !important;
+  cursor: not-allowed !important;
+}
+
+/* --- Pixel border utility for key containers --- */
+body.retro-mode .retro-pixel-border {
+  border: 4px solid #E8E4F0 !important;
+  box-shadow:
+    6px 6px 0 #FF1493,
+    12px 12px 0 rgba(0, 255, 255, 0.25) !important;
+}
+
+/* --- Stat numbers: sunset gradient glow --- */
+body.retro-mode [class*="text-2xl"][class*="font-bold"],
+body.retro-mode [class*="text-3xl"][class*="font-bold"],
+body.retro-mode [class*="text-4xl"][class*="font-bold"] {
+  color: #FF6B35 !important;
+  text-shadow:
+    0 0 8px rgba(255, 107, 53, 0.6),
+    2px 2px 0 #FF1493,
+    4px 4px 0 rgba(0, 255, 255, 0.25);
+}
+
+/* --- Logo in header: keep visible on dark --- */
+body.retro-mode header img {
+  filter: brightness(1.3) contrast(1.1);
+}
+
+/* --- Sunset stripe accent for hero/CTA sections --- */
+body.retro-mode [class*="bg-gradient-to-r"][class*="from-brand-primary"],
+body.retro-mode [class*="bg-brand-gradient"] {
+  background: linear-gradient(90deg, #FF1493 0%, #FF6B35 35%, #8A2BE2 70%, #00FFFF 100%) !important;
+}

@@ -1,0 +1,99 @@
+"use client"
+
+import Link from 'next/link'
+import { useState } from 'react'
+import RetroToggle from './RetroToggle'
+import LanguageToggle from './LanguageToggle'
+import { useI18n } from '@/lib/i18n'
+
+export default function Header() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const { t } = useI18n()
+
+  return (
+    <header className="bg-white border-b border-gray-100 sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2">
+            <img 
+              src="/logo/logo-b2bmax-charte-mistral.svg" 
+              alt="B2BMax" 
+              className="h-8 w-auto"
+            />
+            <span className="font-bold text-xl text-gray-900">B2BMax</span>
+          </Link>
+
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center gap-6">
+            <Link 
+              href="/" 
+              className="text-gray-600 hover:text-brand-primary transition-colors font-medium"
+            >
+              {t('nav_home')}
+            </Link>
+            <Link 
+              href="/explore" 
+              className="text-gray-600 hover:text-brand-primary transition-colors font-medium"
+            >
+              {t('nav_explore')}
+            </Link>
+            <Link 
+              href="/ask" 
+              className="text-gray-600 hover:text-brand-primary transition-colors font-medium"
+            >
+              {t('nav_ask')}
+            </Link>
+            <div className="flex items-center gap-2">
+              <LanguageToggle />
+              <RetroToggle />
+            </div>
+          </nav>
+
+          {/* Mobile Menu Button + Toggles */}
+          <div className="flex items-center gap-2 md:hidden">
+            <LanguageToggle />
+            <RetroToggle />
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Menu */}
+        {isMenuOpen && (
+          <div className="md:hidden bg-white border-t border-gray-100 py-4">
+            <nav className="flex flex-col gap-3">
+              <Link 
+                href="/" 
+                onClick={() => setIsMenuOpen(false)}
+                className="text-gray-600 hover:text-brand-primary px-4 py-2 rounded-lg transition-colors"
+              >
+                {t('nav_home')}
+              </Link>
+              <Link 
+                href="/explore" 
+                onClick={() => setIsMenuOpen(false)}
+                className="text-gray-600 hover:text-brand-primary px-4 py-2 rounded-lg transition-colors"
+              >
+                {t('nav_explore')}
+              </Link>
+              <Link 
+                href="/ask" 
+                onClick={() => setIsMenuOpen(false)}
+                className="text-gray-600 hover:text-brand-primary px-4 py-2 rounded-lg transition-colors"
+              >
+                {t('nav_ask')}
+              </Link>
+            </nav>
+          </div>
+        )}
+      </div>
+    </header>
+  )
+}
