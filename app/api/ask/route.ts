@@ -15,7 +15,7 @@ interface ParsedQuery {
 // Common French cities and their codes
 const ZONE_MAP: Record<string, { code: string; type: string; name: string }> = {
   'paris': { code: '75', type: 'department', name: 'Paris' },
-  'lyon': { code: '69', type: 'department', name: 'Lyon' },
+  'lyon': { code: '69123', type: 'commune', name: 'Lyon' },
   'marseille': { code: '13', type: 'department', name: 'Marseille' },
   'toulouse': { code: '31', type: 'department', name: 'Toulouse' },
   'nice': { code: '06', type: 'department', name: 'Nice' },
@@ -122,15 +122,43 @@ async function queryMarketSignals(
     .order('potential_score', { ascending: false })
     .limit(20)
 
+  // Filter by zone: prefer code match, fall back to name search
   if (parsed.zoneCode) {
     query = query.eq('zone_code', parsed.zoneCode)
+  } else if (parsed.zoneName) {
+    query = query.ilike('zone_name', `%${parsed.zoneName}%`)
   }
+
+  // Filter by sector: prefer code match, fall back to name search
   if (parsed.nafCode) {
     query = query.eq('naf_code', parsed.nafCode)
+  } else if (parsed.sectorName) {
+    query = query.ilike('naf_name', `%${parsed.sectorName}%`)
   }
 
   const { data, error } = await query
   if (error) throw error
+
+  // If no results with code match, try name-based search as fallback
+  if ((!data || data.length === 0) && parsed.zoneName && parsed.zoneCode) {
+    let fallbackQuery = supabase
+      .from('market_signals')
+      .select('*')
+      .ilike('zone_name', `%${parsed.zoneName}%`)
+      .order('potential_score', { ascending: false })
+      .limit(20)
+
+    if (parsed.nafCode) {
+      fallbackQuery = fallbackQuery.eq('naf_code', parsed.nafCode)
+    } else if (parsed.sectorName) {
+      fallbackQuery = fallbackQuery.ilike('naf_name', `%${parsed.sectorName}%`)
+    }
+
+    const { data: fallbackData, error: fallbackError } = await fallbackQuery
+    if (fallbackError) throw fallbackError
+    return fallbackData
+  }
+
   return data
 }
 
@@ -178,8 +206,12 @@ async function queryCompanyStats(
     .from('companies')
     .select('id', { count: 'exact', head: true })
 
-  if (parsed.zoneCode) {
-    query = query.eq('department_code', parsed.zoneCode)
+  if (parsed.zoneName) {
+    if (parsed.zoneType === 'commune') {
+      query = query.ilike('commune_name', `%${parsed.zoneName}%`)
+    } else {
+      query = query.eq('department_code', parsed.zoneCode)
+    }
   }
   if (parsed.nafCode) {
     query = query.eq('naf_level2', parsed.nafCode)
@@ -201,8 +233,12 @@ async function queryRecentCompanies(
     .order('creation_date', { ascending: false })
     .limit(limit)
 
-  if (parsed.zoneCode) {
-    query = query.eq('department_code', parsed.zoneCode)
+  if (parsed.zoneName) {
+    if (parsed.zoneType === 'commune') {
+      query = query.ilike('commune_name', `%${parsed.zoneName}%`)
+    } else {
+      query = query.eq('department_code', parsed.zoneCode)
+    }
   }
   if (parsed.nafCode) {
     query = query.eq('naf_level2', parsed.nafCode)

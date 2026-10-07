@@ -140,6 +140,10 @@ CREATE OR REPLACE FUNCTION calculate_potential(
 ) RETURNS DECIMAL(5,2) AS $$
 DECLARE
   result DECIMAL(5,2);
+  creation_score DECIMAL(5,2);
+  growth_score DECIMAL(5,2);
+  market_score DECIMAL(5,2);
+  competition_normalized DECIMAL(5,2);
 BEGIN
   -- Normalize each component to 0-100 scale
   -- Creation Rate: 0-20% -> 0-100
@@ -253,10 +257,5 @@ CREATE POLICY "Allow public read access on sectors"
 CREATE POLICY "Allow authenticated insert on user_queries"
   ON user_queries FOR INSERT WITH CHECK (auth.uid() IS NOT NULL);
 
--- Storage for logo files
-CREATE STORAGE IF NOT EXISTS b2bmax_logos
-  WITH (
-    file_size_limit='5MB',
-    allowed_mime_types='image/*',
-    bucket_name='b2bmax-logos'
-  );
+-- Storage bucket for logo files (create via Supabase Dashboard or API)
+-- INSERT INTO storage.buckets (id, name, public) VALUES ('b2bmax-logos', 'b2bmax-logos', true);
