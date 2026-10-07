@@ -1,19 +1,12 @@
 import type { Metadata } from 'next'
-import { Inter, Press_Start_2P } from 'next/font/google'
 import '../styles/globals.css'
 import { RetroModeProvider } from '@/lib/retro-mode'
 import { I18nProvider } from '@/lib/i18n'
 
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-})
-
-const pressStart2P = Press_Start_2P({
-  weight: '400',
-  subsets: ['latin'],
-  variable: '--font-pixel',
-})
+// Utilisation de polices système pour éviter le téléchargement Google Fonts au build
+// En production Vercel, vous pouvez réactiver next/font/google
+const inter = { variable: '--font-inter' }
+const pressStart2P = { variable: '--font-pixel' }
 
 export const metadata: Metadata = {
   title: 'B2BMax - Market Intelligence Platform',
