@@ -101,7 +101,7 @@ export async function GET(request: NextRequest) {
     const summary = computeSummary(signals)
 
     // Get available periods from signals (for period filter)
-    const periods = [...new Set(signals.map((s: any) => s.time_period))].sort().reverse()
+    const periods = Array.from(new Set(signals.map((s: any) => s.time_period))).sort().reverse()
 
     return NextResponse.json({
       zones: zonesResult.data || [],

@@ -9,14 +9,14 @@ const inter = { variable: '--font-inter' }
 const pressStart2P = { variable: '--font-pixel' }
 
 export const metadata: Metadata = {
-  title: 'B2BMax - Market Intelligence Platform',
+  title: 'Market Intelligence Platform',
   description: 'Discover market trends and business opportunities with AI-powered analysis of company creation and closure data across France.',
   keywords: ['market analysis', 'business intelligence', 'company data', 'B2B', 'France', 'INSEE', 'market trends'],
-  authors: [{ name: 'B2BMax Team' }],
+  authors: [{ name: 'Mistral AI' }],
   openGraph: {
-    title: 'B2BMax - Market Intelligence Platform',
+    title: 'Market Intelligence Platform',
     description: 'Discover market trends and business opportunities with AI-powered analysis.',
-    images: [{ url: '/logo/logo-b2bmax-charte-mistral.png', width: 1200, height: 630 }],
+    images: [{ url: '/logo/logo-mark.svg', width: 1200, height: 630 }],
   },
 }
 

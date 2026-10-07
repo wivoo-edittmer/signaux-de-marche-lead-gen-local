@@ -15,13 +15,12 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <img 
-              src="/logo/logo-b2bmax-charte-mistral.svg" 
-              alt="B2BMax" 
+          <Link href="/" className="flex items-center">
+            <img
+              src="/logo/logo-mark.svg"
+              alt="Logo"
               className="h-8 w-auto"
             />
-            <span className="font-bold text-xl text-gray-900">B2BMax</span>
           </Link>
 
           {/* Desktop Navigation */}

@@ -12,9 +12,9 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Brand */}
           <div className="space-y-4">
-            <img 
-              src="/logo/logo-b2bmax-version-verte.svg" 
-              alt="B2BMax" 
+            <img
+              src="/logo/logo-mark.svg"
+              alt="Logo"
               className="h-8 w-auto"
             />
             <p className="text-gray-400 text-sm">
@@ -41,7 +41,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-12 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
-          <p>© {new Date().getFullYear()} B2BMax. {t('footer_rights')}</p>
+          <p>© {new Date().getFullYear()}. {t('footer_rights')}</p>
           <p className="mt-2 md:mt-0">
             {t('footer_powered')} <span className="text-brand-primary">Mistral AI</span> {t('footer_powered').includes('by') ? 'and' : 'et'} <span className="text-success-500">data.gouv.fr</span>
           </p>

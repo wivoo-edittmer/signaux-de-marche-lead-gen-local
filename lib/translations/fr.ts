@@ -25,7 +25,7 @@ export const fr: TranslationKeys = {
   explore_full_data: 'Explorer toutes les données',
 
   // Why Section
-  why_title: 'Pourquoi B2BMax ?',
+  why_title: 'Pourquoi utiliser cette plateforme ?',
   why_subtitle: 'Le problème est clair : les signaux de marché existent mais sont invisibles.',
   why_card1_title: 'Ultra Rapide',
   why_card1_desc: 'Obtenez des insights marché en secondes, pas en semaines. L\'agrégation automatisée des données remplace la recherche manuelle.',
@@ -41,7 +41,7 @@ export const fr: TranslationKeys = {
   why_card6_desc: 'Plus de leads, meilleure conversion, revenus plus élevés. Les données se paient elles-mêmes.',
 
   // What Section
-  what_title: 'Qu\'est-ce que B2BMax ?',
+  what_title: 'Qu\'est-ce que cette plateforme ?',
   what_subtitle: 'Une plateforme qui transforme les données brutes en intelligence commerciale actionnable.',
   what_feature1_title: 'Agrégation de Données',
   what_feature1_desc: "Nous collectons et traitons automatiquement les annonces de création et de fermeture d'entreprises provenant de l'INSEE et d'autres sources officielles. Fini la saisie manuelle ou la lecture d'annonces une par une.",
@@ -72,7 +72,7 @@ export const fr: TranslationKeys = {
 
   // CTA Section
   cta_title: 'Prêt à Transformer Votre Intelligence Marché ?',
-  cta_subtitle: 'Arrêtez de deviner. Commencez à savoir. Rejoignez les entreprises qui utilisent déjà B2BMax pour gagner un avantage compétitif.',
+  cta_subtitle: 'Arrêtez de deviner. Commencez à savoir. Rejoignez les entreprises qui utilisent déjà cette plateforme pour gagner un avantage compétitif.',
   cta_explore: 'Commencer l\'Exploration',
   cta_ask: "Discuter avec l'Assistant IA",
 
@@ -122,6 +122,12 @@ export const fr: TranslationKeys = {
   explore_view_signals_desc: 'Croissance, contraction & potentiel par zone × secteur',
   explore_view_leads: 'Génération de Leads',
   explore_view_leads_desc: 'Nouvelles entreprises à contacter, dès leur création',
+
+  // Explore — Dynamic Page Titles
+  explore_title_signals: 'Tableau de Bord — Santé du Marché',
+  explore_subtitle_signals: 'Découvrez quels marchés se développent ou se contractent. Analysez les taux de création, les tendances de croissance et les scores de potentiel par zone et secteur.',
+  explore_title_leads: 'Génération de Leads',
+  explore_subtitle_leads: 'Trouvez les nouvelles entreprises dès leur création. Filtrez par zone et secteur pour constituer votre liste de prospects.',
 
   // Explore — Filters
   explore_all_zones: 'Toutes les zones',
@@ -191,6 +197,33 @@ export const fr: TranslationKeys = {
   explore_period_q3: 'T3',
   explore_period_q4: 'T4',
 
+  // Explore — Charts
+  explore_charts_title: 'Visualisations',
+  explore_charts_subtitle: 'Cliquez sur un élément du graphique pour filtrer les données',
+  explore_chart_potential_by_zone: 'Score de Potentiel par Zone',
+  explore_chart_potential_by_zone_desc: 'Cliquez sur une barre pour filtrer par zone',
+  explore_chart_growth_trend: 'Tendance du Taux de Croissance',
+  explore_chart_growth_trend_desc: 'Cliquez sur un point pour filtrer par période',
+  explore_chart_grade_distribution: 'Répartition des Notes',
+  explore_chart_grade_distribution_desc: 'Cliquez sur une part pour filtrer par note',
+  explore_chart_new_by_sector: 'Nouvelles Entreprises par Secteur',
+  explore_chart_new_by_sector_desc: 'Cliquez sur une barre pour filtrer par secteur',
+  explore_chart_net_growth_by_zone: 'Croissance Nette par Zone',
+  explore_chart_net_growth_by_zone_desc: 'Cliquez sur une barre pour filtrer par zone',
+  explore_chart_companies_trend: 'Tendance du Nombre d\'Entreprises',
+  explore_chart_companies_trend_desc: 'Cliquez sur un point pour filtrer par période',
+  explore_chart_no_data: 'Données insuffisantes pour ce graphique',
+  explore_chart_click_to_filter: 'Cliquer pour filtrer',
+
+  // Explore — Cross-filter
+  explore_active_filters: 'Filtres Actifs',
+  explore_filter_zone: 'Zone',
+  explore_filter_sector: 'Secteur',
+  explore_filter_period: 'Période',
+  explore_filter_grade: 'Note',
+  explore_clear_all: 'Tout effacer',
+  explore_filtered_by: 'Filtré par',
+
   // Ask Page
   ask_breadcrumb_home: 'Accueil',
   ask_breadcrumb_current: 'Poser à l\'IA',
@@ -200,7 +233,7 @@ export const fr: TranslationKeys = {
   ask_send: 'Envoyer',
   ask_powered: 'Propulsé par Mistral AI avec les données de l\'INSEE',
   ask_suggestions_title: 'Essayez ceci :',
-  ask_ai_greeting: "Bonjour ! Je suis votre Assistant IA B2BMax. Je peux vous aider à analyser les tendances de marché, les données d'entreprises et le potentiel commercial. Essayez de me demander quelque chose sur un secteur ou une zone spécifique.",
+  ask_ai_greeting: "Bonjour ! Je suis votre Assistant IA. Je peux vous aider à analyser les tendances de marché, les données d'entreprises et le potentiel commercial. Essayez de me demander quelque chose sur un secteur ou une zone spécifique.",
 
   // Selectors
   selector_select_zone: 'Sélectionner une zone',

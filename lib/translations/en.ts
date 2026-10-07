@@ -23,7 +23,7 @@ export const en = {
   explore_full_data: 'Explore Full Market Data',
 
   // Why Section
-  why_title: 'Why B2BMax?',
+  why_title: 'Why use this platform?',
   why_subtitle: 'The problem is clear: market signals exist but are invisible.',
   why_card1_title: 'Lightning Fast',
   why_card1_desc: 'Get market insights in seconds, not weeks. Automated data aggregation replaces manual research.',
@@ -39,7 +39,7 @@ export const en = {
   why_card6_desc: 'More leads, better conversion, higher revenue. The data pays for itself.',
 
   // What Section
-  what_title: 'What is B2BMax?',
+  what_title: 'What is this platform?',
   what_subtitle: 'A platform that transforms raw data into actionable business intelligence.',
   what_feature1_title: 'Data Aggregation',
   what_feature1_desc: 'We automatically collect and process company creation and closure announcements from INSEE and other official sources. No more manual data entry or reading announcements one by one.',
@@ -70,7 +70,7 @@ export const en = {
 
   // CTA Section
   cta_title: 'Ready to Transform Your Market Intelligence?',
-  cta_subtitle: 'Stop guessing. Start knowing. Join the companies that are already using B2BMax to gain a competitive edge.',
+  cta_subtitle: 'Stop guessing. Start knowing. Join the companies already using this platform to gain a competitive edge.',
   cta_explore: 'Start Exploring',
   cta_ask: 'Ask AI Assistant',
 
@@ -120,6 +120,12 @@ export const en = {
   explore_view_signals_desc: 'Growth, contraction & potential by zone × sector',
   explore_view_leads: 'Lead Gen',
   explore_view_leads_desc: 'New companies to contact, as they appear',
+
+  // Explore — Dynamic Page Titles
+  explore_title_signals: 'Market Health Dashboard',
+  explore_subtitle_signals: 'See which markets are growing or contracting. Analyze creation rates, growth patterns, and potential scores by zone and sector.',
+  explore_title_leads: 'Lead Generation',
+  explore_subtitle_leads: 'Find new companies the moment they are created. Filter by zone and sector to build your prospect list.',
 
   // Explore — Filters
   explore_all_zones: 'All zones',
@@ -189,6 +195,33 @@ export const en = {
   explore_period_q3: 'Q3',
   explore_period_q4: 'Q4',
 
+  // Explore — Charts
+  explore_charts_title: 'Visualizations',
+  explore_charts_subtitle: 'Click any chart element to cross-filter the data',
+  explore_chart_potential_by_zone: 'Potential Score by Zone',
+  explore_chart_potential_by_zone_desc: 'Click a bar to filter by zone',
+  explore_chart_growth_trend: 'Growth Rate Trend',
+  explore_chart_growth_trend_desc: 'Click a point to filter by period',
+  explore_chart_grade_distribution: 'Grade Distribution',
+  explore_chart_grade_distribution_desc: 'Click a slice to filter by grade',
+  explore_chart_new_by_sector: 'New Companies by Sector',
+  explore_chart_new_by_sector_desc: 'Click a bar to filter by sector',
+  explore_chart_net_growth_by_zone: 'Net Growth by Zone',
+  explore_chart_net_growth_by_zone_desc: 'Click a bar to filter by zone',
+  explore_chart_companies_trend: 'Total Companies Trend',
+  explore_chart_companies_trend_desc: 'Click a point to filter by period',
+  explore_chart_no_data: 'Not enough data for this chart',
+  explore_chart_click_to_filter: 'Click to filter',
+
+  // Explore — Cross-filter
+  explore_active_filters: 'Active Filters',
+  explore_filter_zone: 'Zone',
+  explore_filter_sector: 'Sector',
+  explore_filter_period: 'Period',
+  explore_filter_grade: 'Grade',
+  explore_clear_all: 'Clear all',
+  explore_filtered_by: 'Filtered by',
+
   // Ask Page
   ask_breadcrumb_home: 'Home',
   ask_breadcrumb_current: 'Ask AI',
@@ -198,7 +231,7 @@ export const en = {
   ask_send: 'Send',
   ask_powered: 'Powered by Mistral AI with data from INSEE',
   ask_suggestions_title: 'Try these:',
-  ask_ai_greeting: "Hi! I'm your B2BMax AI Assistant. I can help you analyze market trends, company data, and business potential. Try asking me about a specific sector or zone.",
+  ask_ai_greeting: "Hi! I'm your AI Assistant. I can help you analyze market trends, company data, and business potential. Try asking me about a specific sector or zone.",
 
   // Selectors
   selector_select_zone: 'Select a zone',
