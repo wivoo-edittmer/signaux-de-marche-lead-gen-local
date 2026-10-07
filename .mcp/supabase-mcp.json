@@ -1,0 +1,33 @@
+{
+  "name": "supabase-market-signals",
+  "version": "1.0.0",
+  "description": "Supabase MCP server for market signals project",
+  "type": "typescript",
+  "entrypoint": "dist/index.js",
+  "env": {
+    "SUPABASE_URL": "${SUPABASE_URL}",
+    "SUPABASE_ACCESS_TOKEN": "${SUPABASE_ACCESS_TOKEN}"
+  },
+  "runtime": "node",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0",
+    "@modelcontextprotocol/sdk": "^0.6.0"
+  },
+  "capabilities": [
+    {
+      "type": "read",
+      "resource": "database",
+      "description": "Query company data, sectors, zones"
+    },
+    {
+      "type": "write",
+      "resource": "database",
+      "description": "Update analysis results, trends"
+    },
+    {
+      "type": "subscribe",
+      "resource": "realtime",
+      "description": "Stream new company creations in real-time"
+    }
+  ]
+}

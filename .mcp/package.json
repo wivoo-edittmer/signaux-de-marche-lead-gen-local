@@ -1,0 +1,24 @@
+{
+  "name": "market-signals-mcp",
+  "version": "1.0.0",
+  "description": "MCP servers for market signals analysis project",
+  "private": true,
+  "scripts": {
+    "dev:supabase": "npx @modelcontextprotocol/server-supabase",
+    "dev:mapbox": "npx @modelcontextprotocol/server-mapbox",
+    "dev:github": "npx @modelcontextprotocol/server-github",
+    "dev:filesystem": "npx @modelcontextprotocol/server-filesystem ."
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/sdk": "^0.6.0"
+  },
+  "keywords": [
+    "mcp",
+    "supabase",
+    "mapbox",
+    "market-analysis",
+    "geospatial"
+  ],
+  "author": "",
+  "license": "MIT"
+}
