@@ -3,6 +3,7 @@
 
 import { NextResponse } from 'next/server';
 import { loadSectors } from '@/lib/data-loader';
+import { corsResponse, corsErrorResponse, handleCorsOptions } from '@/lib/utils';
 import type { Sector } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
@@ -11,19 +12,20 @@ interface RouteParams {
   params: { id: string };
 }
 
+export async function OPTIONS(request: Request): Promise<NextResponse> {
+  return handleCorsOptions(request);
+}
+
 export async function GET(
-  _request: Request,
+  request: Request,
   { params }: RouteParams
 ): Promise<NextResponse<Sector | { error: string }>> {
   const sectors = await loadSectors();
   const sector = sectors.get(params.id);
 
   if (!sector) {
-    return NextResponse.json(
-      { error: 'Secteur non trouvé' },
-      { status: 404 }
-    );
+    return corsErrorResponse('Secteur non trouvé', 404, undefined, request);
   }
 
-  return NextResponse.json(sector);
+  return corsResponse(sector, 200, request);
 }

@@ -3,11 +3,16 @@
 
 import { NextResponse } from 'next/server';
 import { loadSectors } from '@/lib/data-loader';
+import { corsResponse, handleCorsOptions } from '@/lib/utils';
 import type { Sector } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(): Promise<NextResponse<Sector[]>> {
+export async function OPTIONS(request: Request): Promise<NextResponse> {
+  return handleCorsOptions(request);
+}
+
+export async function GET(request: Request): Promise<NextResponse<Sector[]>> {
   const sectors = await loadSectors();
-  return NextResponse.json(Array.from(sectors.values()));
+  return corsResponse(Array.from(sectors.values()), 200, request);
 }

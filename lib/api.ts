@@ -1,7 +1,7 @@
 // Client API pour appeler le backend B2Bmax Next.js
 // Remplace les appels mockés et l'ancienne route /api/ask locale
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
 
 // ============================================================
 // Types (correspondance avec le backend next-app)

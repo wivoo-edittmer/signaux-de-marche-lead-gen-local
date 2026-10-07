@@ -22,6 +22,9 @@ import {
   getNextActions,
   generateInsight,
   generateChatResponse,
+  corsResponse,
+  corsErrorResponse,
+  handleCorsOptions,
 } from '@/lib/utils';
 import type {
   ChatMessageRequest,
@@ -30,6 +33,11 @@ import type {
 } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
+
+// Gestion CORS preflight
+export async function OPTIONS(request: Request): Promise<NextResponse> {
+  return handleCorsOptions(request);
+}
 
 // Gestion des sessions en mémoire (pour MVP1, pas de persistance)
 const sessions = new Map<string, {
@@ -64,9 +72,11 @@ export async function POST(
     const body: ChatMessageRequest = await request.json();
 
     if (!body.message || body.message.trim().length === 0) {
-      return NextResponse.json(
-        { error: 'Le champ "message" est requis' },
-        { status: 400 }
+      return corsErrorResponse(
+        'Le champ "message" est requis',
+        400,
+        undefined,
+        request
       );
     }
 
@@ -181,12 +191,14 @@ export async function POST(
         : undefined,
     };
 
-    return NextResponse.json(response);
+    return corsResponse(response, 200, request);
   } catch (error) {
     console.error('Erreur dans chat/messages:', error);
-    return NextResponse.json(
-      { error: (error as Error).message || 'Erreur interne du serveur' },
-      { status: 500 }
+    return corsErrorResponse(
+      (error as Error).message || 'Erreur interne du serveur',
+      500,
+      undefined,
+      request
     );
   }
 }

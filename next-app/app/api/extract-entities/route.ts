@@ -3,9 +3,14 @@
 
 import { NextResponse } from 'next/server';
 import { extractEntities } from '@/lib/data-loader';
+import { corsResponse, corsErrorResponse, handleCorsOptions } from '@/lib/utils';
 import type { ChatMessageRequest, ExtractedEntities } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
+
+export async function OPTIONS(request: Request): Promise<NextResponse> {
+  return handleCorsOptions(request);
+}
 
 export async function POST(
   request: Request
@@ -14,20 +19,19 @@ export async function POST(
     const body: ChatMessageRequest = await request.json();
 
     if (!body.message) {
-      return NextResponse.json(
-        { error: 'Le champ "message" est requis' },
-        { status: 400 }
-      );
+      return corsErrorResponse('Le champ "message" est requis', 400, undefined, request);
     }
 
     const entities = await extractEntities(body.message);
 
-    return NextResponse.json({ entities });
+    return corsResponse({ entities }, 200, request);
   } catch (error) {
     console.error('Erreur dans extract-entities:', error);
-    return NextResponse.json(
-      { error: (error as Error).message || 'Erreur interne du serveur' },
-      { status: 500 }
+    return corsErrorResponse(
+      (error as Error).message || 'Erreur interne du serveur',
+      500,
+      undefined,
+      request
     );
   }
 }

@@ -4,11 +4,16 @@
 import { NextResponse } from 'next/server';
 import { getSupabaseClient } from '@/lib/supabase';
 import { loadReferenceData } from '@/lib/data-loader';
+import { corsResponse, corsErrorResponse, handleCorsOptions } from '@/lib/utils';
 import type { HealthResponse } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(): Promise<NextResponse<HealthResponse | { error: string }>> {
+export async function OPTIONS(request: Request): Promise<NextResponse> {
+  return handleCorsOptions(request);
+}
+
+export async function GET(request: Request): Promise<NextResponse<HealthResponse | { error: string }>> {
   try {
     // Vérifier la connexion à Supabase
     let dbStatus: HealthResponse['database'];
@@ -43,17 +48,14 @@ export async function GET(): Promise<NextResponse<HealthResponse | { error: stri
       };
     }
 
-    return NextResponse.json({
+    return corsResponse({
       status: 'healthy',
       timestamp: new Date().toISOString(),
       version: '1.0.0',
       database: dbStatus,
       data_loader: dataLoaderStats,
-    });
+    }, 200, request);
   } catch (error) {
-    return NextResponse.json(
-      { error: (error as Error).message },
-      { status: 500 }
-    );
+    return corsErrorResponse((error as Error).message, 500, undefined, request);
   }
 }

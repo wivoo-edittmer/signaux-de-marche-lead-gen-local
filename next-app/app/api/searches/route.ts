@@ -10,10 +10,14 @@ import {
   loadSectors,
   loadZones,
 } from '@/lib/data-loader';
-import { generateId, nowIso, getNextActions, generateInsight } from '@/lib/utils';
+import { generateId, nowIso, getNextActions, generateInsight, corsResponse, corsErrorResponse, handleCorsOptions } from '@/lib/utils';
 import type { SearchRequest, SearchResponse } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
+
+export async function OPTIONS(request: Request): Promise<NextResponse> {
+  return handleCorsOptions(request);
+}
 
 export async function POST(
   request: Request
@@ -104,12 +108,14 @@ export async function POST(
       status: 'completed',
     };
 
-    return NextResponse.json(response);
+    return corsResponse(response, 200, request);
   } catch (error) {
     console.error('Erreur dans searches:', error);
-    return NextResponse.json(
-      { error: (error as Error).message || 'Erreur interne du serveur' },
-      { status: 500 }
+    return corsErrorResponse(
+      (error as Error).message || 'Erreur interne du serveur',
+      500,
+      undefined,
+      request
     );
   }
 }

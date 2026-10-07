@@ -21,24 +21,27 @@
 
 import { NextResponse } from 'next/server';
 import { transcribeAudio, isMistralConfigured } from '@/lib/mistral';
+import { corsResponse, corsErrorResponse, handleCorsOptions } from '@/lib/utils';
 import type { TranscriptionResponse, TranscriptionError } from '@/lib/transcription-types';
 
 export const dynamic = 'force-dynamic';
 // Augmenter la limite de taille pour les fichiers audio (50 MB)
 export const maxDuration = 300; // 5 minutes max
 
+export async function OPTIONS(request: Request): Promise<NextResponse> {
+  return handleCorsOptions(request);
+}
+
 export async function POST(
   request: Request
 ): Promise<NextResponse<TranscriptionResponse | TranscriptionError>> {
   // Vérifier la configuration
   if (!isMistralConfigured()) {
-    return NextResponse.json(
-      {
-        error: 'Service de transcription non configuré',
-        detail: 'La variable d\'environnement MISTRAL_API_KEY est requise',
-        status: 503,
-      },
-      { status: 503 }
+    return corsErrorResponse(
+      'Service de transcription non configuré',
+      503,
+      'La variable d\'environnement MISTRAL_API_KEY est requise',
+      request
     );
   }
 

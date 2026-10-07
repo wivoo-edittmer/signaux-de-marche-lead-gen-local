@@ -5,7 +5,7 @@
 // ne sont pas persistées en base de données.
 
 import { NextResponse } from 'next/server';
-import { nowIso, getNextActions } from '@/lib/utils';
+import { nowIso, getNextActions, corsResponse, handleCorsOptions } from '@/lib/utils';
 import type { SearchResponse } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
@@ -14,8 +14,12 @@ interface RouteParams {
   params: { id: string };
 }
 
+export async function OPTIONS(request: Request): Promise<NextResponse> {
+  return handleCorsOptions(request);
+}
+
 export async function GET(
-  _request: Request,
+  request: Request,
   { params }: RouteParams
 ): Promise<NextResponse<SearchResponse>> {
   // Pour le MVP1, on retourne des données mockées
@@ -56,5 +60,5 @@ export async function GET(
     status: 'completed',
   };
 
-  return NextResponse.json(response);
+  return corsResponse(response, 200, request);
 }

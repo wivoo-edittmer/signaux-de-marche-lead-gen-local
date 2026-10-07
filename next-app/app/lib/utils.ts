@@ -200,7 +200,88 @@ export function generateChatResponse(
 }
 
 /**
- * CORS headers pour les réponses API
+ * CORS - Origines autorisées
+ */
+const ALLOWED_ORIGINS = [
+  'http://localhost:3000',
+  'http://localhost:3001',
+  'http://localhost:3002',
+  'http://localhost:3003',
+  'http://127.0.0.1:3000',
+  'http://127.0.0.1:3001',
+  'http://127.0.0.1:3002',
+  'http://127.0.0.1:3003',
+  
+];
+
+// Ajouter les origines depuis les variables d'environnement
+if (process.env.ALLOWED_ORIGINS) {
+  ALLOWED_ORIGINS.push(...process.env.ALLOWED_ORIGINS.split(',').map((o) => o.trim()));
+}
+
+/**
+ * Retourne les headers CORS pour une requête donnée
+ * Si l'origine est autorisée, retourne cette origine, sinon retourne la première origine autorisée
+ */
+export function getCorsHeaders(request?: Request): Record<string, string> {
+  const origin = request?.headers.get('origin') || '';
+  const isAllowed = ALLOWED_ORIGINS.includes(origin) ||
+    (process.env.NODE_ENV === 'production' && origin.endsWith('.vercel.app'));
+
+  return {
+    'Access-Control-Allow-Origin': isAllowed ? origin : ALLOWED_ORIGINS[0],
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With, Accept, Origin',
+    'Access-Control-Allow-Credentials': 'true',
+    'Access-Control-Max-Age': '86400',
+  };
+}
+
+/**
+ * Crée une réponse avec les headers CORS
+ */
+export function corsResponse<T>(data: T, status = 200, request?: Request): NextResponse<T> {
+  return NextResponse.json(data, {
+    status,
+    headers: getCorsHeaders(request),
+  });
+}
+
+/**
+ * Crée une réponse d'erreur avec les headers CORS
+ */
+export function corsErrorResponse(
+  message: string,
+  status = 500,
+  detail?: string,
+  request?: Request
+): NextResponse<ApiError> {
+  return NextResponse.json(
+    {
+      error: message,
+      detail: detail || message,
+      status,
+    },
+    {
+      status,
+      headers: getCorsHeaders(request),
+    }
+  );
+}
+
+/**
+ * Gère les requêtes OPTIONS (preflight CORS)
+ */
+export function handleCorsOptions(request: Request): NextResponse {
+  return new NextResponse(null, {
+    status: 204,
+    headers: getCorsHeaders(request),
+  });
+}
+
+/**
+ * Anciennes fonctions pour compatibilité (deprecated)
+ * @deprecated Utiliser getCorsHeaders, corsResponse, corsErrorResponse, handleCorsOptions
  */
 export const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -209,7 +290,7 @@ export const corsHeaders = {
 };
 
 /**
- * Gère les requêtes OPTIONS (preflight CORS)
+ * @deprecated Utiliser handleCorsOptions(request)
  */
 export function handleOptions(): NextResponse {
   return new NextResponse(null, { status: 204, headers: corsHeaders });
