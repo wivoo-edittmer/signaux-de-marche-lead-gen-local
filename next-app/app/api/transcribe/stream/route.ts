@@ -42,11 +42,17 @@
 //     }
 //   }
 
+import { NextResponse } from 'next/server';
 import { transcribeAudio, isMistralConfigured, TRANSCRIPTION_MODELS } from '@/lib/mistral';
+import { getCorsHeaders, handleCorsOptions } from '@/lib/utils';
 import type { TranscriptionStreamEvent, TranscriptionSegment } from '@/lib/transcription-types';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 300; // 5 minutes max
+
+export async function OPTIONS(request: Request): Promise<NextResponse> {
+  return handleCorsOptions(request);
+}
 
 /**
  * Crée un ReadableStream SSE à partir d'un générateur d'événements

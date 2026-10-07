@@ -91,25 +91,21 @@ export async function POST(
       diarize = body.diarize;
       customTerms = body.custom_terms;
     } else {
-      return NextResponse.json(
-        {
-          error: 'Content-Type non supporté',
-          detail: 'Utilisez multipart/form-data (upload fichier) ou application/json (file_url)',
-          status: 400,
-        },
-        { status: 400 }
+      return corsErrorResponse(
+        'Content-Type non supporté',
+        400,
+        'Utilisez multipart/form-data (upload fichier) ou application/json (file_url)',
+        request
       );
     }
 
     // Validation
     if (!file && !fileUrl) {
-      return NextResponse.json(
-        {
-          error: 'Fichier audio requis',
-          detail: 'Envoyez un fichier via "file" (multipart) ou une URL via "file_url" (JSON)',
-          status: 400,
-        },
-        { status: 400 }
+      return corsErrorResponse(
+        'Fichier audio requis',
+        400,
+        'Envoyez un fichier via "file" (multipart) ou une URL via "file_url" (JSON)',
+        request
       );
     }
 
@@ -124,7 +120,7 @@ export async function POST(
       customTerms,
     });
 
-    return NextResponse.json(result as TranscriptionResponse);
+    return corsResponse(result as TranscriptionResponse, 200, request);
   } catch (error) {
     console.error('Erreur transcription:', error);
     const message = (error as Error).message;
@@ -139,25 +135,6 @@ export async function POST(
       status = 503;
     }
 
-    return NextResponse.json(
-      {
-        error: 'Erreur de transcription',
-        detail: message,
-        status,
-      },
-      { status }
-    );
+    return corsErrorResponse('Erreur de transcription', status, message, request);
   }
-}
-
-// OPTIONS pour CORS preflight
-export async function OPTIONS(): Promise<NextResponse> {
-  return new NextResponse(null, {
-    status: 204,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    },
-  });
 }
