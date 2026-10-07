@@ -1,12 +1,13 @@
 "use client"
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import Link from 'next/link'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import ZoneSelector from '@/components/ZoneSelector'
 import SectorSelector from '@/components/SectorSelector'
 import DateRangePicker from '@/components/DateRangePicker'
+import MapView from '@/components/MapView'
 import { useI18n } from '@/lib/i18n'
 
 // Mock data for demonstration
@@ -39,6 +40,7 @@ const mockMarketData = [
     companies: 2458,
     newCompanies: 213,
     closedCompanies: 45,
+    coordinates: [2.3522, 48.8566] as [number, number],
   },
   {
     zone: 'Paris',
@@ -52,6 +54,7 @@ const mockMarketData = [
     companies: 3847,
     newCompanies: 158,
     closedCompanies: 89,
+    coordinates: [2.3522, 48.8566] as [number, number],
   },
   {
     zone: 'Paris',
@@ -65,6 +68,7 @@ const mockMarketData = [
     companies: 1562,
     newCompanies: 254,
     closedCompanies: 23,
+    coordinates: [2.3522, 48.8566] as [number, number],
   },
   {
     zone: 'Lyon',
@@ -78,6 +82,7 @@ const mockMarketData = [
     companies: 1234,
     newCompanies: 98,
     closedCompanies: 32,
+    coordinates: [4.8357, 45.7640] as [number, number],
   },
 ]
 
@@ -121,6 +126,21 @@ export default function ExplorePage() {
     setStartDate(start)
     setEndDate(end)
   }, [])
+
+  const mapMarkers = useMemo(() => {
+    return marketData.map(item => ({
+      zone: item.zone,
+      zoneType: item.zoneType,
+      sector: item.sector,
+      potential: item.potential,
+      grade: item.grade,
+      growthRate: item.growthRate,
+      companies: item.companies,
+      newCompanies: item.newCompanies,
+      closedCompanies: item.closedCompanies,
+      coordinates: item.coordinates,
+    }))
+  }, [marketData])
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -216,6 +236,14 @@ export default function ExplorePage() {
                   {marketData.reduce((sum, item) => sum + item.newCompanies, 0)}
                 </div>
               </div>
+            </div>
+          )}
+
+          {/* Map */}
+          {!isLoading && marketData.length > 0 && (
+            <div className="bg-white rounded-xl shadow-card p-6">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">Geographic Overview</h2>
+              <MapView markers={mapMarkers} height="450px" />
             </div>
           )}
 
