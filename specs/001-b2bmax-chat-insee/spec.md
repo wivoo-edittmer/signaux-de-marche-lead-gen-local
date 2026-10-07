@@ -224,6 +224,13 @@ B2Bmax offre une interface conversationnelle où les utilisateurs:
 | NF-030 | Interface intuitive sur mobile et desktop | Test utilisateur avec 80% de satisfaction |
 | NF-031 | Accessibilité WCAG 2.1 niveau AA | Audit d'accessibilité validé |
 
+### Architecture et Déploiement
+
+| ID | Exigence | Critère |
+|----|----------|---------|
+| NF-032 | Le frontend doit être construit avec Next.js (App Router) et déployable sur Vercel | Le frontend est déployé sur Vercel et communique avec l'API backend configurée |
+| NF-033 | Les API Python et traitements longs ou planifiés ne doivent pas dépendre d'une exécution serveur persistante sur Vercel | Ils sont hébergés sur un service backend ou une plateforme de tâches adaptée |
+
 ---
 
 ## Critères de Succès
@@ -323,9 +330,10 @@ B2Bmax offre une interface conversationnelle où les utilisateurs:
 
 ## Notes Techniques (Optionnel - pour contexte)
 
-Cette section peut contenir des notes pour l'équipe technique, mais ne doit pas influencer la spécification elle-même.
+Cette section donne du contexte technique complémentaire. Les contraintes de déploiement requises sont définies dans NF-032 et NF-033.
 
-- Architecture envisagée: Frontend (React/Next.js) + Backend (FastAPI/Node.js) + Base de données (PostgreSQL/Supabase)
+- Frontend: Next.js avec TypeScript et App Router, déployé sur Vercel
+- Backend: API FastAPI hébergée séparément (par exemple Railway ou Render); le frontend Next.js la consomme via son URL configurée
 - L'application utilisera l'API Mistral pour le NLP (Natural Language Processing)
 - Les données INSEE peuvent être accédées via l'API Sirius ou des fichiers Open Data
 - Un système de cache sera nécessaire pour les requêtes fréquentes

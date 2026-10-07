@@ -13,15 +13,15 @@
 
 | Composant | Technologie | Justification |
 |-----------|-------------|---------------|
-| **Frontend** | Next.js 14 + React + TypeScript | Framework moderne, SSR pour SEO, bonne intégration avec Mistral, communauté active |
-| **Backend API** | FastAPI (Python) | Performance, typage avec Pydantic, intégration facile avec Mistral AI, documentation Swagger automatique |
+| **Frontend** | Next.js 14+ + React + TypeScript (App Router) | Interface web déployée sur Vercel et connectée à l'API backend |
+| **Backend API** | FastAPI (Python) | API métier et accès aux données INSEE, hébergée séparément de Vercel |
 | **Base de Données** | Supabase (PostgreSQL) | Solution open-source, intégration native avec Auth, Realtime, Storage, compatible avec Mistral |
 | **IA/LLM** | Mistral AI (mistral-small, mistral-medium) | Déjà utilisé dans le projet, excellente compréhension du français, coût raisonnable |
 | **Authentification** | Supabase Auth | Intégration native, support OAuth, JWT, gestion des sessions |
 | **Notifications** | Supabase Realtime + Email (SendGrid) | Realtime pour notifications push, SendGrid pour emails transactionnels |
 | **Tasks Async** | Celery + Redis | Gestion des tâches de fond (envoi emails, génération rapports, prospection) |
 | **Stockage Fichiers** | Supabase Storage | Pour stocker les rapports PDF et autres documents |
-| **Déploiement** | Vercel (Frontend) + Railway/Render (Backend) | Vercel pour Next.js, Railway pour FastAPI + Supabase |
+| **Déploiement** | Vercel (frontend) + Railway/Render (backend) + Supabase | Vercel pour Next.js; Railway ou Render pour l'API FastAPI et les workers |
 
 ### Architecture Globale
 
@@ -63,11 +63,13 @@ Le projet `insee-api/` existant contient déjà:
 - Un fichier `openapi-insee.yml` (spécification OpenAPI)
 - Une structure de base pour interroger les données INSEE
 
-**Stratégie**: 
-1. **Réutiliser** l'API existante comme service backend pour B2Bmax
-2. **Étendre** l'API avec les nouvelles fonctionnalités (chat, agents de prospection)
-3. **Ajouter** un frontend Next.js pour l'interface conversationnelle
+**Stratégie**:
+1. **Réutiliser** `insee-api/` comme API backend FastAPI pour les données INSEE et les traitements métier
+2. **Déployer** le frontend Next.js sur Vercel et l'API FastAPI séparément sur Railway ou Render
+3. **Connecter** le frontend à l'API via une URL de backend configurée dans l'environnement
 4. **Intégrer** Supabase pour la persistance et l'authentification
+
+Les traitements planifiés ou de longue durée (par exemple Celery/Redis) restent des services externes et ne s'exécutent pas dans une fonction Vercel.
 
 ---
 
@@ -172,7 +174,7 @@ Le projet `insee-api/` existant contient déjà:
 | Configuration | ⏳ EN ATTENTE | `.env`, `requirements.txt` |
 | Données Supabase | ❌ À FAIRE | Exécuter le script |
 | Backend FastAPI | ⏳ EN COURS | `insee-api/main.py` (existant) |
-| Frontend Next.js | ❌ À FAIRE | Optionnel pour validation |
+| Application Next.js | ❌ À FAIRE | Requise pour le parcours utilisateur et le déploiement Vercel |
 
 **🎯 Prochaine étape immédiate**:
 1. **Configurer Supabase** (5 min)
@@ -210,7 +212,7 @@ Le projet `insee-api/` existant contient déjà:
 2. ✅ **Data Loader**: `insee-api/data/data_loader.py` pour charger les CSV
 3. ✅ **Données de référence**: `sectors.json` et `zones.json` créés
 4. ⏳ Créer le frontend Next.js avec page de chat
-5. ⏳ Connecter le frontend au backend
+5. ⏳ Connecter le frontend à l'API FastAPI et à Supabase
 6. ⏳ Tester l'extraction d'entités et la génération de synthèses
 7. ⏳ Valider avec les cas d'usage du README.md
 
@@ -318,7 +320,7 @@ Le projet `insee-api/` existant contient déjà:
 - Design amélioré et accessibilité
 - Tests unitaires et d'intégration
 - Documentation complète
-- Déploiement sur Vercel et Railway
+- Déploiement du frontend Next.js sur Vercel et du backend FastAPI sur Railway ou Render
 - Monitoring et logs
 - Gestion des erreurs améliorée
 
@@ -335,7 +337,7 @@ Le projet `insee-api/` existant contient déjà:
 - [ ] Le design est professionnel et accessible
 - [ ] Les tests couvrent au moins 80% du code
 - [ ] La documentation est complète
-- [ ] L'application est déployée et fonctionnelle
+- [ ] L'application Next.js est déployée et fonctionnelle sur Vercel
 - [ ] Le monitoring est en place
 - [ ] Les erreurs sont gérées gracieusement
 

@@ -28,7 +28,7 @@
 | [data_loader.py](../../../insee-api/scripts/data_loader.py) | ✅ COMPLET | High | - |
 | Données chargées dans Supabase | ⏳ EN ATTENTE | High | Vous |
 | Backend FastAPI fonctionnel | ⏳ EN COURS | High | - |
-| Frontend Next.js basique | ❌ À FAIRE | Medium | - |
+| Frontend Next.js basique | ❌ À FAIRE | High | - |
 | Tests de validation | ❌ À FAIRE | Medium | - |
 
 ---
@@ -126,7 +126,7 @@
   - [ ] Les recherches retournent des données valides
   - [ ] Les temps de réponse sont < 5 secondes
 
-### Phase 3: Frontend Next.js (Optionnel pour validation MVP1)
+### Phase 3: Application Next.js (Requise pour le parcours utilisateur et le déploiement Vercel)
 
 #### Tâche 3.1: Préparer le projet frontend
 - [ ] **Créer le projet Next.js** :
@@ -170,7 +170,7 @@
   pytest tests/ -v
   ```
 
-#### Tâche 4.2: Tests frontend (si implémenté)
+#### Tâche 4.2: Tests frontend Next.js
 - [ ] **Tester l'interface de chat**
   - [ ] Saisie de message
   - [ ] Affichage des réponses
@@ -208,7 +208,7 @@
 - [ ] ✅ Les vues SQL fonctionnent correctement
 - [ ] ✅ Les fonctions SQL retournent des résultats valides
 
-### Frontend (si implémenté)
+### Frontend Next.js
 - [ ] ✅ L'interface de chat est accessible
 - [ ] ✅ Les messages sont envoyés au backend
 - [ ] ✅ Les réponses sont affichées correctement
