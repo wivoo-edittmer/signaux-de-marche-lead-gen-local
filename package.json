@@ -21,7 +21,8 @@
     "zustand": "^4.4.7",
     "date-fns": "^2.30.0",
     "clsx": "^2.1.0",
-    "tailwind-merge": "^2.2.1"
+    "tailwind-merge": "^2.2.1",
+    "@supabase/supabase-js": "^2.39.0"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",
