@@ -96,15 +96,15 @@ export const en = {
   // Explore Page
   explore_breadcrumb_home: 'Home',
   explore_breadcrumb_current: 'Explore',
-  explore_title: 'Explore Market Data',
-  explore_subtitle: 'Discover market trends and business opportunities by zone and sector. Analyze creation rates, growth patterns, and potential scores.',
+  explore_title: 'Market Signals & Leads',
+  explore_subtitle: 'See which markets are growing, which are contracting, and find new companies to contact — by zone and sector.',
   explore_filters: 'Filters',
   explore_zone_label: 'Geographic Zone',
   explore_sector_label: 'Business Sector',
   explore_period_label: 'Time Period',
-  explore_total_markets: 'Total Markets',
+  explore_total_markets: 'Markets Tracked',
   explore_avg_potential: 'Avg. Potential',
-  explore_highest_growth: 'Highest Growth',
+  explore_highest_growth: 'Top Growth',
   explore_new_companies: 'New Companies',
   explore_loading: 'Loading market data...',
   explore_no_data: 'No market data found for selected filters.',
@@ -114,6 +114,80 @@ export const en = {
   explore_new: 'new',
   explore_closed: 'closed',
   explore_grade: 'Grade',
+
+  // Explore — View Toggle
+  explore_view_signals: 'Market Health',
+  explore_view_signals_desc: 'Growth, contraction & potential by zone × sector',
+  explore_view_leads: 'Lead Gen',
+  explore_view_leads_desc: 'New companies to contact, as they appear',
+
+  // Explore — Filters
+  explore_all_zones: 'All zones',
+  explore_all_sectors: 'All sectors',
+  explore_all_periods: 'All periods',
+  explore_apply_filters: 'Apply',
+  explore_clear_filters: 'Clear',
+
+  // Explore — Stats
+  explore_stat_total_companies: 'Total Companies',
+  explore_stat_closed: 'Closed',
+  explore_stat_net_growth: 'Net Growth',
+  explore_stat_creation_rate: 'Creation Rate',
+  explore_stat_grade_a: 'Grade A Markets',
+  explore_stat_avg_score: 'Avg Score',
+
+  // Explore — Signals Table
+  explore_signals_title: 'Market Signals',
+  explore_signals_subtitle: 'Aggregated creation, closure and growth data by zone and sector',
+  explore_col_zone: 'Zone',
+  explore_col_sector: 'Sector',
+  explore_col_period: 'Period',
+  explore_col_companies: 'Companies',
+  explore_col_new: 'New',
+  explore_col_closed: 'Closed',
+  explore_col_net: 'Net',
+  explore_col_growth: 'Growth',
+  explore_col_creation_rate: 'Creation Rate',
+  explore_col_score: 'Score',
+  explore_col_grade: 'Grade',
+  explore_sort_by: 'Sort by',
+  explore_sort_score: 'Potential Score',
+  explore_sort_growth: 'Growth Rate',
+  explore_sort_new: 'New Companies',
+  explore_sort_companies: 'Total Companies',
+  explore_no_signals: 'No market signals for this combination. Try a broader zone or sector.',
+
+  // Explore — Grade Descriptions
+  explore_grade_a: 'Exceptional opportunity',
+  explore_grade_b: 'Strong potential',
+  explore_grade_c: 'Moderate',
+  explore_grade_d: 'Emerging',
+  explore_grade_e: 'Declining',
+
+  // Explore — Leads
+  explore_leads_title: 'New Companies',
+  explore_leads_subtitle: 'Recently created companies matching your filters — ready to contact',
+  explore_leads_count: '{count} new companies found',
+  explore_lead_name: 'Company',
+  explore_lead_location: 'Location',
+  explore_lead_sector: 'Sector',
+  explore_lead_created: 'Created',
+  explore_lead_employees: 'Employees',
+  explore_lead_contact: 'Contact',
+  explore_lead_view: 'View',
+  explore_no_leads: 'No new companies found for this combination. Try broadening your filters.',
+  explore_leads_cta: 'Want leads delivered automatically?',
+  explore_leads_cta_button: 'Set up alerts',
+
+  // Explore — Map
+  explore_map_title: 'Geographic Overview',
+  explore_map_no_data: 'No location data available for current filters.',
+
+  // Explore — Periods
+  explore_period_q1: 'Q1',
+  explore_period_q2: 'Q2',
+  explore_period_q3: 'Q3',
+  explore_period_q4: 'Q4',
 
   // Ask Page
   ask_breadcrumb_home: 'Home',

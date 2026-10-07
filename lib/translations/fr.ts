@@ -98,13 +98,13 @@ export const fr: TranslationKeys = {
   // Explore Page
   explore_breadcrumb_home: 'Accueil',
   explore_breadcrumb_current: 'Explorer',
-  explore_title: 'Explorer les Données de Marché',
-  explore_subtitle: 'Découvrez les tendances de marché et les opportunités commerciales par zone et secteur. Analysez les taux de création, les modèles de croissance et les scores de potentiel.',
+  explore_title: 'Signaux de Marché & Leads',
+  explore_subtitle: 'Découvrez quels marchés se développent, lesquels se contractent, et trouvez les nouvelles entreprises à contacter — par zone et par secteur.',
   explore_filters: 'Filtres',
   explore_zone_label: 'Zone Géographique',
   explore_sector_label: 'Secteur d\'Activité',
   explore_period_label: 'Période',
-  explore_total_markets: 'Marchés Totaux',
+  explore_total_markets: 'Marchés suivis',
   explore_avg_potential: 'Potentiel Moyen',
   explore_highest_growth: 'Croissance Max',
   explore_new_companies: 'Nouvelles Entreprises',
@@ -116,6 +116,80 @@ export const fr: TranslationKeys = {
   explore_new: 'nouvelles',
   explore_closed: 'fermées',
   explore_grade: 'Note',
+
+  // Explore — View Toggle
+  explore_view_signals: 'Santé du Marché',
+  explore_view_signals_desc: 'Croissance, contraction & potentiel par zone × secteur',
+  explore_view_leads: 'Génération de Leads',
+  explore_view_leads_desc: 'Nouvelles entreprises à contacter, dès leur création',
+
+  // Explore — Filters
+  explore_all_zones: 'Toutes les zones',
+  explore_all_sectors: 'Tous les secteurs',
+  explore_all_periods: 'Toutes les périodes',
+  explore_apply_filters: 'Appliquer',
+  explore_clear_filters: 'Effacer',
+
+  // Explore — Stats
+  explore_stat_total_companies: 'Total Entreprises',
+  explore_stat_closed: 'Fermetures',
+  explore_stat_net_growth: 'Croissance Nette',
+  explore_stat_creation_rate: 'Taux de Création',
+  explore_stat_grade_a: 'Marchés Note A',
+  explore_stat_avg_score: 'Score Moyen',
+
+  // Explore — Signals Table
+  explore_signals_title: 'Signaux de Marché',
+  explore_signals_subtitle: 'Données agrégées de créations, fermetures et croissance par zone et secteur',
+  explore_col_zone: 'Zone',
+  explore_col_sector: 'Secteur',
+  explore_col_period: 'Période',
+  explore_col_companies: 'Entreprises',
+  explore_col_new: 'Nouvelles',
+  explore_col_closed: 'Fermées',
+  explore_col_net: 'Net',
+  explore_col_growth: 'Croissance',
+  explore_col_creation_rate: 'Taux Création',
+  explore_col_score: 'Score',
+  explore_col_grade: 'Note',
+  explore_sort_by: 'Trier par',
+  explore_sort_score: 'Score de Potentiel',
+  explore_sort_growth: 'Taux de Croissance',
+  explore_sort_new: 'Nouvelles Entreprises',
+  explore_sort_companies: 'Total Entreprises',
+  explore_no_signals: 'Aucun signal de marché pour cette combinaison. Essayez une zone ou un secteur plus large.',
+
+  // Explore — Grade Descriptions
+  explore_grade_a: 'Opportunité exceptionnelle',
+  explore_grade_b: 'Fort potentiel',
+  explore_grade_c: 'Modéré',
+  explore_grade_d: 'Émergent',
+  explore_grade_e: 'En déclin',
+
+  // Explore — Leads
+  explore_leads_title: 'Nouvelles Entreprises',
+  explore_leads_subtitle: 'Entreprises récemment créées correspondant à vos filtres — prêtes à être contactées',
+  explore_leads_count: '{count} nouvelles entreprises trouvées',
+  explore_lead_name: 'Entreprise',
+  explore_lead_location: 'Localisation',
+  explore_lead_sector: 'Secteur',
+  explore_lead_created: 'Créée le',
+  explore_lead_employees: 'Effectif',
+  explore_lead_contact: 'Contacter',
+  explore_lead_view: 'Voir',
+  explore_no_leads: 'Aucune nouvelle entreprise trouvée pour cette combinaison. Élargissez vos filtres.',
+  explore_leads_cta: 'Recevez les leads automatiquement ?',
+  explore_leads_cta_button: 'Créer une alerte',
+
+  // Explore — Map
+  explore_map_title: 'Vue Géographique',
+  explore_map_no_data: 'Aucune donnée de localisation pour les filtres actuels.',
+
+  // Explore — Periods
+  explore_period_q1: 'T1',
+  explore_period_q2: 'T2',
+  explore_period_q3: 'T3',
+  explore_period_q4: 'T4',
 
   // Ask Page
   ask_breadcrumb_home: 'Accueil',
