@@ -30,8 +30,14 @@ export function RetroModeProvider({ children }: { children: React.ReactNode }) {
     if (!isMounted) return
     if (isRetro) {
       document.body.classList.add('retro-mode')
+      document.body.classList.add('retro-powering-on')
+      const timer = setTimeout(() => {
+        document.body.classList.remove('retro-powering-on')
+      }, 500)
+      return () => clearTimeout(timer)
     } else {
       document.body.classList.remove('retro-mode')
+      document.body.classList.remove('retro-powering-on')
     }
     localStorage.setItem(STORAGE_KEY, String(isRetro))
   }, [isRetro, isMounted])

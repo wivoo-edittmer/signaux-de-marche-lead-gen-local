@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect } from 'react'
+import { useI18n } from '@/lib/i18n'
 
 interface DateRangePickerProps {
   startDate: string
@@ -9,6 +10,7 @@ interface DateRangePickerProps {
 }
 
 export default function DateRangePicker({ startDate, endDate, onChange }: DateRangePickerProps) {
+  const { t, locale } = useI18n()
   const [isOpen, setIsOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
@@ -26,13 +28,13 @@ export default function DateRangePicker({ startDate, endDate, onChange }: DateRa
 
   // Quick date ranges
   const quickRanges = [
-    { label: 'Last 7 days', start: () => formatDate(new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)), end: () => formatDate(new Date()) },
-    { label: 'Last 30 days', start: () => formatDate(new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)), end: () => formatDate(new Date()) },
-    { label: 'Last 90 days', start: () => formatDate(new Date(Date.now() - 90 * 24 * 60 * 60 * 1000)), end: () => formatDate(new Date()) },
-    { label: 'Last 6 months', start: () => formatDate(new Date(Date.now() - 6 * 30 * 24 * 60 * 60 * 1000)), end: () => formatDate(new Date()) },
-    { label: 'Last 12 months', start: () => formatDate(new Date(Date.now() - 12 * 30 * 24 * 60 * 60 * 1000)), end: () => formatDate(new Date()) },
-    { label: 'This year', start: () => formatDate(new Date(new Date().getFullYear(), 0, 1)), end: () => formatDate(new Date()) },
-    { label: 'Last year', start: () => formatDate(new Date(new Date().getFullYear() - 1, 0, 1)), end: () => formatDate(new Date(new Date().getFullYear() - 1, 11, 31)) },
+    { label: t('date_last_7_days'), start: () => formatDate(new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)), end: () => formatDate(new Date()) },
+    { label: t('date_last_30_days'), start: () => formatDate(new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)), end: () => formatDate(new Date()) },
+    { label: t('date_last_90_days'), start: () => formatDate(new Date(Date.now() - 90 * 24 * 60 * 60 * 1000)), end: () => formatDate(new Date()) },
+    { label: t('date_last_6_months'), start: () => formatDate(new Date(Date.now() - 6 * 30 * 24 * 60 * 60 * 1000)), end: () => formatDate(new Date()) },
+    { label: t('date_last_12_months'), start: () => formatDate(new Date(Date.now() - 12 * 30 * 24 * 60 * 60 * 1000)), end: () => formatDate(new Date()) },
+    { label: t('date_this_year'), start: () => formatDate(new Date(new Date().getFullYear(), 0, 1)), end: () => formatDate(new Date()) },
+    { label: t('date_last_year'), start: () => formatDate(new Date(new Date().getFullYear() - 1, 0, 1)), end: () => formatDate(new Date(new Date().getFullYear() - 1, 11, 31)) },
   ]
 
   const formatDate = (date: Date) => {
@@ -46,7 +48,7 @@ export default function DateRangePicker({ startDate, endDate, onChange }: DateRa
 
   const displayDate = (dateString: string) => {
     const date = new Date(dateString)
-    return date.toLocaleDateString('en-US', { 
+    return date.toLocaleDateString(locale === 'fr' ? 'fr-FR' : 'en-US', { 
       year: 'numeric', 
       month: 'short', 
       day: 'numeric' 
@@ -87,7 +89,7 @@ export default function DateRangePicker({ startDate, endDate, onChange }: DateRa
           {/* Custom range - Simplified for now */}
           <div className="p-4">
             <p className="text-xs text-gray-500 text-center">
-              Custom date ranges coming soon
+              {t('date_custom_coming')}
             </p>
           </div>
         </div>

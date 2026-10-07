@@ -1,16 +1,18 @@
 "use client"
 
 import { useRetroMode } from '@/lib/retro-mode'
+import { useI18n } from '@/lib/i18n'
 
 export default function RetroToggle() {
   const { isRetro, toggleRetro } = useRetroMode()
+  const { t } = useI18n()
 
   return (
     <button
       onClick={toggleRetro}
       className="retro-toggle-btn"
-      title={isRetro ? 'Exit 09s mode' : 'Enter 09s mode'}
-      aria-label={isRetro ? 'Exit retro mode' : 'Enter retro mode'}
+      title={isRetro ? t('retro_toggle_off') : t('retro_toggle_on')}
+      aria-label={isRetro ? t('retro_toggle_off') : t('retro_toggle_on')}
       aria-pressed={isRetro}
     >
       <span className="retro-toggle-icon" aria-hidden="true">
@@ -30,23 +32,23 @@ export default function RetroToggle() {
             <rect x="13" y="11" width="2" height="2" fill="currentColor" />
           </svg>
         ) : (
-          // Pixelated "game controller / 09s" icon
+          // Pixelated cassette tape icon — pure 80s
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" shapeRendering="crispEdges">
-            <rect x="2" y="6" width="16" height="8" fill="currentColor" />
-            <rect x="4" y="4" width="4" height="2" fill="currentColor" />
-            <rect x="12" y="4" width="4" height="2" fill="currentColor" />
-            <rect x="4" y="14" width="4" height="2" fill="currentColor" />
-            <rect x="12" y="14" width="4" height="2" fill="currentColor" />
-            {/* D-pad cross cutout */}
-            <rect x="5" y="8" width="2" height="4" fill="var(--retro-bg, #fff)" />
-            <rect x="4" y="9" width="4" height="2" fill="var(--retro-bg, #fff)" />
-            {/* Button dots cutout */}
-            <rect x="13" y="8" width="2" height="2" fill="var(--retro-bg, #fff)" />
-            <rect x="15" y="10" width="2" height="2" fill="var(--retro-bg, #fff)" />
+            {/* Cassette body */}
+            <rect x="1" y="4" width="18" height="12" fill="currentColor" />
+            {/* Top label area cutout */}
+            <rect x="3" y="6" width="14" height="3" fill="var(--retro-bg, #fff)" />
+            {/* Reel holes */}
+            <rect x="4" y="11" width="3" height="3" fill="var(--retro-bg, #fff)" />
+            <rect x="13" y="11" width="3" height="3" fill="var(--retro-bg, #fff)" />
+            {/* Tape window line */}
+            <rect x="7" y="11" width="6" height="1" fill="var(--retro-bg, #fff)" />
+            {/* Bottom trapezoid cutout */}
+            <rect x="6" y="14" width="8" height="2" fill="var(--retro-bg, #fff)" />
           </svg>
         )}
       </span>
-      <span className="retro-toggle-label">09s</span>
+      <span className="retro-toggle-label">Take me back</span>
     </button>
   )
 }

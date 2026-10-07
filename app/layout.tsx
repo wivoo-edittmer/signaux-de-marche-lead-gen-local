@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter, Press_Start_2P } from 'next/font/google'
 import '../styles/globals.css'
 import { RetroModeProvider } from '@/lib/retro-mode'
+import { I18nProvider } from '@/lib/i18n'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -34,9 +35,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} ${pressStart2P.variable} font-sans antialiased`}>
-        <RetroModeProvider>
-          {children}
-        </RetroModeProvider>
+        <I18nProvider>
+          <RetroModeProvider>
+            {children}
+          </RetroModeProvider>
+        </I18nProvider>
       </body>
     </html>
   )

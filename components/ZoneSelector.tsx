@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from 'react'
+import { useI18n } from '@/lib/i18n'
 
 interface ZoneOption {
   code: string
@@ -15,6 +16,7 @@ interface ZoneSelectorProps {
 }
 
 export default function ZoneSelector({ value, onChange, zones }: ZoneSelectorProps) {
+  const { t } = useI18n()
   const [isOpen, setIsOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const dropdownRef = useRef<HTMLDivElement>(null)
@@ -49,7 +51,7 @@ export default function ZoneSelector({ value, onChange, zones }: ZoneSelectorPro
         className="w-full input flex items-center justify-between cursor-pointer"
       >
         <span className={selectedZone ? '' : 'text-gray-400'}>
-          {selectedZone ? `${selectedZone.name} (${selectedZone.type})` : 'Select a zone'}
+          {selectedZone ? `${selectedZone.name} (${selectedZone.type})` : t('selector_select_zone')}
         </span>
         <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -63,7 +65,7 @@ export default function ZoneSelector({ value, onChange, zones }: ZoneSelectorPro
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search zones..."
+              placeholder={t('selector_search_zones')}
               className="w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary"
               autoFocus
             />
@@ -72,7 +74,7 @@ export default function ZoneSelector({ value, onChange, zones }: ZoneSelectorPro
           <div className="max-h-60 overflow-auto">
             {filteredZones.length === 0 ? (
               <div className="p-4 text-center text-gray-400 text-sm">
-                No zones found
+                {t('selector_no_zones')}
               </div>
             ) : (
               <div className="py-1">

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from 'react'
+import { useI18n } from '@/lib/i18n'
 
 interface SectorOption {
   code: string
@@ -15,6 +16,7 @@ interface SectorSelectorProps {
 }
 
 export default function SectorSelector({ value, onChange, sectors }: SectorSelectorProps) {
+  const { t } = useI18n()
   const [isOpen, setIsOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const dropdownRef = useRef<HTMLDivElement>(null)
@@ -58,7 +60,7 @@ export default function SectorSelector({ value, onChange, sectors }: SectorSelec
         className="w-full input flex items-center justify-between cursor-pointer"
       >
         <span className={selectedSector ? '' : 'text-gray-400'}>
-          {selectedSector ? `${selectedSector.name} (${selectedSector.type})` : 'Select a sector'}
+          {selectedSector ? `${selectedSector.name} (${selectedSector.type})` : t('selector_select_sector')}
         </span>
         <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -72,7 +74,7 @@ export default function SectorSelector({ value, onChange, sectors }: SectorSelec
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search sectors..."
+              placeholder={t('selector_search_sectors')}
               className="w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary"
               autoFocus
             />
@@ -110,7 +112,7 @@ export default function SectorSelector({ value, onChange, sectors }: SectorSelec
 
             {Object.keys(groupedSectors).length === 0 && (
               <div className="p-4 text-center text-gray-400 text-sm">
-                No sectors found
+                {t('selector_no_sectors')}
               </div>
             )}
           </div>

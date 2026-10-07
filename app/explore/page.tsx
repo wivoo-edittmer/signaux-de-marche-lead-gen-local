@@ -7,6 +7,7 @@ import Footer from '@/components/Footer'
 import ZoneSelector from '@/components/ZoneSelector'
 import SectorSelector from '@/components/SectorSelector'
 import DateRangePicker from '@/components/DateRangePicker'
+import { useI18n } from '@/lib/i18n'
 
 // Mock data for demonstration
 const mockZones = [
@@ -88,15 +89,8 @@ const gradeColors: Record<string, string> = {
   E: 'bg-warning-700',
 }
 
-const gradeTextColors = {
-  A: 'text-success-700',
-  B: 'text-success-500',
-  C: 'text-gray-500',
-  D: 'text-warning-500',
-  E: 'text-warning-700',
-}
-
 export default function ExplorePage() {
+  const { t } = useI18n()
   const [selectedZone, setSelectedZone] = useState<string>('75')
   const [selectedSector, setSelectedSector] = useState<string>('56')
   const [startDate, setStartDate] = useState<string>('2024-01-01')
@@ -136,31 +130,30 @@ export default function ExplorePage() {
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm text-gray-500 mb-6">
           <Link href="/" className="hover:text-brand-primary transition-colors">
-            Home
+            {t('explore_breadcrumb_home')}
           </Link>
           <span>/</span>
-          <span className="text-gray-900 font-medium">Explore</span>
+          <span className="text-gray-900 font-medium">{t('explore_breadcrumb_current')}</span>
         </nav>
 
         {/* Header */}
         <div className="mb-10">
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
-            Explore Market Data
+            {t('explore_title')}
           </h1>
           <p className="text-gray-600 max-w-2xl">
-            Discover market trends and business opportunities by zone and sector. 
-            Analyze creation rates, growth patterns, and potential scores.
+            {t('explore_subtitle')}
           </p>
         </div>
 
         {/* Filters */}
         <div className="bg-white rounded-xl shadow-card p-6 mb-10">
-          <h2 className="text-xl font-semibold text-gray-900 mb-6">Filters</h2>
+          <h2 className="text-xl font-semibold text-gray-900 mb-6">{t('explore_filters')}</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Geographic Zone
+                {t('explore_zone_label')}
               </label>
               <ZoneSelector
                 value={selectedZone}
@@ -171,7 +164,7 @@ export default function ExplorePage() {
             
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Business Sector
+                {t('explore_sector_label')}
               </label>
               <SectorSelector
                 value={selectedSector}
@@ -182,7 +175,7 @@ export default function ExplorePage() {
             
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Time Period
+                {t('explore_period_label')}
               </label>
               <DateRangePicker
                 startDate={startDate}
@@ -199,26 +192,26 @@ export default function ExplorePage() {
           {marketData.length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
               <div className="bg-white rounded-xl shadow-card p-6">
-                <div className="text-sm text-gray-500 mb-1">Total Markets</div>
+                <div className="text-sm text-gray-500 mb-1">{t('explore_total_markets')}</div>
                 <div className="text-3xl font-bold text-gray-900">{marketData.length}</div>
               </div>
               
               <div className="bg-white rounded-xl shadow-card p-6">
-                <div className="text-sm text-gray-500 mb-1">Avg. Potential</div>
+                <div className="text-sm text-gray-500 mb-1">{t('explore_avg_potential')}</div>
                 <div className="text-3xl font-bold text-brand-primary">
                   {Math.round(marketData.reduce((sum, item) => sum + item.potential, 0) / marketData.length)}
                 </div>
               </div>
               
               <div className="bg-white rounded-xl shadow-card p-6">
-                <div className="text-sm text-gray-500 mb-1">Highest Growth</div>
+                <div className="text-sm text-gray-500 mb-1">{t('explore_highest_growth')}</div>
                 <div className="text-3xl font-bold text-success-700">
                   {Math.max(...marketData.map(item => item.growthRate))}%
                 </div>
               </div>
               
               <div className="bg-white rounded-xl shadow-card p-6">
-                <div className="text-sm text-gray-500 mb-1">New Companies</div>
+                <div className="text-sm text-gray-500 mb-1">{t('explore_new_companies')}</div>
                 <div className="text-3xl font-bold text-gray-900">
                   {marketData.reduce((sum, item) => sum + item.newCompanies, 0)}
                 </div>
@@ -230,11 +223,11 @@ export default function ExplorePage() {
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-12">
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-primary"></div>
-              <p className="mt-4 text-gray-500">Loading market data...</p>
+              <p className="mt-4 text-gray-500">{t('explore_loading')}</p>
             </div>
           ) : marketData.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-gray-500">No market data found for selected filters.</p>
+              <p className="text-gray-500">{t('explore_no_data')}</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -254,7 +247,7 @@ export default function ExplorePage() {
                         </p>
                       </div>
                       <span className={`badge ${gradeColors[item.grade as string]} text-white`}>
-                        Grade {item.grade}
+                        {t('explore_grade')} {item.grade}
                       </span>
                     </div>
 
@@ -264,13 +257,13 @@ export default function ExplorePage() {
                           {item.potential}
                         </div>
                         <div className="text-sm text-gray-500">
-                          Potential Score
+                          {t('explore_potential_score')}
                         </div>
                       </div>
                       
                       <div className="flex-1">
                         <div className="flex justify-between items-center mb-2">
-                          <span className="text-sm text-gray-500">Growth</span>
+                          <span className="text-sm text-gray-500">{t('explore_growth')}</span>
                           <span className={`font-semibold ${item.growthRate >= 0 ? 'text-success-700' : 'text-warning-700'}`}>
                             {item.growthRate >= 0 ? '+' : ''}{item.growthRate}%
                           </span>
@@ -286,17 +279,17 @@ export default function ExplorePage() {
 
                     <div className="pt-6 border-t border-gray-100 flex justify-between items-center text-sm">
                       <div>
-                        <span className="text-gray-500">Companies</span>
+                        <span className="text-gray-500">{t('explore_companies')}</span>
                         <span className="ml-2 font-medium text-gray-900">{item.companies}</span>
                       </div>
                       <div className="flex gap-4">
                         <div>
                           <span className="text-success-700 font-medium">+{item.newCompanies}</span>
-                          <span className="text-gray-400 text-xs ml-1">new</span>
+                          <span className="text-gray-400 text-xs ml-1">{t('explore_new')}</span>
                         </div>
                         <div>
                           <span className="text-warning-700 font-medium">{item.closedCompanies}</span>
-                          <span className="text-gray-400 text-xs ml-1">closed</span>
+                          <span className="text-gray-400 text-xs ml-1">{t('explore_closed')}</span>
                         </div>
                       </div>
                     </div>

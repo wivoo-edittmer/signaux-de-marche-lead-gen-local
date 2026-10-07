@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import { useI18n } from '@/lib/i18n'
 
 interface Message {
   id: string
@@ -116,12 +117,13 @@ const gradeColors: Record<string, string> = {
 }
 
 function AskPageInner() {
+  const { t } = useI18n()
   const searchParams = useSearchParams()
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
       role: 'ai',
-      content: "Hi! I'm your B2BMax AI Assistant. I can help you analyze market trends, company data, and business potential. Try asking me about a specific sector or zone.",
+      content: t('ask_ai_greeting'),
       timestamp: new Date(),
     },
   ])
@@ -469,20 +471,19 @@ function AskPageInner() {
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm text-gray-500 mb-6">
           <Link href="/" className="hover:text-brand-primary transition-colors">
-            Home
+            {t('ask_breadcrumb_home')}
           </Link>
           <span>/</span>
-          <span className="text-gray-900 font-medium">Ask AI</span>
+          <span className="text-gray-900 font-medium">{t('ask_breadcrumb_current')}</span>
         </nav>
 
         {/* Header */}
         <div className="mb-10">
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
-            Ask Specific Questions
+            {t('ask_title')}
           </h1>
           <p className="text-gray-600 max-w-2xl">
-            Ask me anything about French companies, market trends, and business opportunities. 
-            I'll provide data-driven answers with visualizations.
+            {t('ask_subtitle')}
           </p>
         </div>
 
@@ -530,7 +531,7 @@ function AskPageInner() {
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Ask about market trends..."
+                placeholder={t('ask_placeholder')}
                 className="flex-1 input"
                 disabled={isLoading}
               />
@@ -549,19 +550,19 @@ function AskPageInner() {
                     ></path>
                   </svg>
                 ) : (
-                  'Send'
+                  t('ask_send')
                 )}
               </button>
             </form>
             <p className="text-xs text-gray-400 mt-2 text-center">
-              Powered by Mistral AI with data from INSEE
+              {t('ask_powered')}
             </p>
           </div>
         </div>
 
         {/* Suggestions */}
         <div className="mt-8">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Try these:</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('ask_suggestions_title')}</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <button
               onClick={() => setInput('show me restaurant trends in paris')}

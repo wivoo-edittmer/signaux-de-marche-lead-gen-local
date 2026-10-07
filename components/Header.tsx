@@ -3,9 +3,12 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import RetroToggle from './RetroToggle'
+import LanguageToggle from './LanguageToggle'
+import { useI18n } from '@/lib/i18n'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const { t } = useI18n()
 
   return (
     <header className="bg-white border-b border-gray-100 sticky top-0 z-50">
@@ -22,30 +25,34 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden md:flex items-center gap-6">
             <Link 
               href="/" 
               className="text-gray-600 hover:text-brand-primary transition-colors font-medium"
             >
-              Home
+              {t('nav_home')}
             </Link>
             <Link 
               href="/explore" 
               className="text-gray-600 hover:text-brand-primary transition-colors font-medium"
             >
-              Explore
+              {t('nav_explore')}
             </Link>
             <Link 
               href="/ask" 
               className="text-gray-600 hover:text-brand-primary transition-colors font-medium"
             >
-              Ask AI
+              {t('nav_ask')}
             </Link>
-            <RetroToggle />
+            <div className="flex items-center gap-2">
+              <LanguageToggle />
+              <RetroToggle />
+            </div>
           </nav>
 
-          {/* Mobile Menu Button + Retro Toggle */}
+          {/* Mobile Menu Button + Toggles */}
           <div className="flex items-center gap-2 md:hidden">
+            <LanguageToggle />
             <RetroToggle />
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -67,25 +74,22 @@ export default function Header() {
                 onClick={() => setIsMenuOpen(false)}
                 className="text-gray-600 hover:text-brand-primary px-4 py-2 rounded-lg transition-colors"
               >
-                Home
+                {t('nav_home')}
               </Link>
               <Link 
                 href="/explore" 
                 onClick={() => setIsMenuOpen(false)}
                 className="text-gray-600 hover:text-brand-primary px-4 py-2 rounded-lg transition-colors"
               >
-                Explore
+                {t('nav_explore')}
               </Link>
               <Link 
                 href="/ask" 
                 onClick={() => setIsMenuOpen(false)}
                 className="text-gray-600 hover:text-brand-primary px-4 py-2 rounded-lg transition-colors"
               >
-                Ask AI
+                {t('nav_ask')}
               </Link>
-              <div className="px-4 py-2">
-                <RetroToggle />
-              </div>
             </nav>
           </div>
         )}
