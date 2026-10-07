@@ -1,0 +1,14 @@
+# MCP server build artifacts
+node_modules/
+dist/
+.env
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db

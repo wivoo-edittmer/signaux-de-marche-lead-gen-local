@@ -1,0 +1,37 @@
+{
+  "name": "mapbox-market-mapping",
+  "version": "1.0.0",
+  "description": "Mapbox MCP server for geographic market analysis",
+  "type": "typescript",
+  "entrypoint": "dist/index.js",
+  "env": {
+    "MAPBOX_TOKEN": "${MAPBOX_TOKEN}"
+  },
+  "runtime": "node",
+  "dependencies": {
+    "@mapbox/mapbox-sdk": "^0.13.0",
+    "@modelcontextprotocol/sdk": "^0.6.0"
+  },
+  "capabilities": [
+    {
+      "type": "function",
+      "name": "geocode",
+      "description": "Convert addresses to coordinates"
+    },
+    {
+      "type": "function",
+      "name": "reverse_geocode",
+      "description": "Convert coordinates to addresses"
+    },
+    {
+      "type": "function",
+      "name": "generate_static_map",
+      "description": "Create market heatmap visualizations"
+    },
+    {
+      "type": "function", 
+      "name": "search_places",
+      "description": "Find companies by location and sector"
+    }
+  ]
+}
