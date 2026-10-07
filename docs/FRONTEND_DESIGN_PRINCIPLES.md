@@ -45,27 +45,39 @@ This document outlines the design principles, patterns, and guidelines for the B
 
 ### Color Palette
 
-#### Primary Colors
+**Based on Mistral AI Graphic Charter** - See `CHARTE_GRAPHIQUE_MISTRAL.md` for full details.
+
+### Primary Colors (Mistral Charter)
 ```
---primary-500: #2563EB (Blue - Trust, Professionalism)
---primary-600: #1D4ED8
---primary-700: #1E40AF
+--brand-primary: #FF7000        (Orange - Primary brand color)
+--brand-primary-light: #F5D90A   (Light yellow for gradients)
+--brand-primary-dark: #FAA42B   (Yellow-orange transition)
+
+--brand-accent: #16A34A         (Green - For positive signals)
+--brand-accent-light: #A3E635   (Light green for gradients)
 ```
 
-#### Secondary Colors
+### Semantic Colors (Mapped to Market Signals)
 ```
---secondary-500: #059669 (Green - Growth, Positive signals)
---secondary-600: #047857
+/* Growth/Success (Green Palette) */
+--success-50: #A3E635
+--success-100: #65C547
+--success-500: #22C55E
+--success-700: #16A34A
+--success-900: #15803D
+
+/* Warning/Attention (Orange Palette) */
+--warning-50: #F5D90A
+--warning-100: #FAA42B
+--warning-500: #FF9E00
+--warning-700: #FF7000
+
+/* Error/Danger */
+--error-500: #DC2626
+--error-700: #B91C1C
 ```
 
-#### Warning/Error Colors
-```
---warning-500: #D97706 (Orange - Attention needed)
---error-500: #DC2626 (Red - Negative trends, errors)
---error-600: #B91C1C
-```
-
-#### Neutral Colors
+### Neutral Colors
 ```
 --gray-50: #F9FAFB
 --gray-100: #F3F4F6
@@ -78,6 +90,19 @@ This document outlines the design principles, patterns, and guidelines for the B
 --gray-800: #1F2937
 --gray-900: #111827
 ```
+
+### Gradients (From Mistral Charter)
+```
+--gradient-brand: linear-gradient(to right, #F5D90A, #FAA42B, #FF9E00, #FF7000);
+--gradient-accent: linear-gradient(to right, #A3E635, #65C547, #22C55E, #16A34A, #15803D);
+```
+
+**Color Usage for Market Signals:**
+- **Strong Growth (>10%)**: `--success-700` (#16A34A)
+- **Moderate Growth (5-10%)**: `--success-500` (#22C55E)
+- **Stable (<5%)**: `--gray-500` (#6B7280)
+- **Moderate Decline (-5 to -10%)**: `--warning-500` (#FF9E00)
+- **Strong Decline (<-10%)**: `--warning-700` (#FF7000)
 
 ### Typography
 
@@ -167,11 +192,11 @@ Using 4px base unit:
 - **Tables**: Detailed data views with sorting/filtering
 
 #### Chart Design Principles
-- **Color Coding**: Consistent color mapping across all charts
-  - Green: Growth, positive trends
-  - Red: Decline, negative trends
+- **Color Coding** (Mistral Charter): Consistent color mapping across all charts
+  - Green (#16A34A, #22C55E): Growth, positive trends
+  - Orange (#FF7000, #FF9E00): Warnings, attention needed, decline
+  - Red (#DC2626): Errors, strong decline
   - Blue: Neutral, information
-  - Orange: Warnings, attention needed
 - **Responsiveness**: Charts must reflow on mobile
 - **Accessibility**: Color + pattern for colorblind users
 - **Interactivity**: Hover for details, click to drill down
