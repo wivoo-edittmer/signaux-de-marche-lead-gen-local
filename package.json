@@ -38,5 +38,12 @@
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.3.3"
+  },
+  "overrides": {
+    "glob": "^9.3.0",
+    "rimraf": "^4.4.0",
+    "whatwg-encoding": "^3.0.0",
+    "domexception": "^6.0.0",
+    "abab": "^3.0.0"
   }
 }
