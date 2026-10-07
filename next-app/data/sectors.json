@@ -1,0 +1,213 @@
+[
+  {
+    "id": "A",
+    "naf_code": "A",
+    "name": "Agriculture, sylviculture et pêche",
+    "description": "Culture, élevage, chasse, sylviculture et pêche",
+    "level": 1
+  },
+  {
+    "id": "B",
+    "naf_code": "B",
+    "name": "Industries extractives",
+    "description": "Extraction de pétrole, gaz, minerais, etc.",
+    "level": 1
+  },
+  {
+    "id": "C",
+    "naf_code": "C",
+    "name": "Industrie manufacturière",
+    "description": "Fabrication de produits alimentaires, textiles, bois, papier, chimie, etc.",
+    "level": 1
+  },
+  {
+    "id": "D",
+    "naf_code": "D",
+    "name": "Production et distribution d'électricité, de gaz, de vapeur et d'air conditionné",
+    "description": "Production et distribution d'énergie",
+    "level": 1
+  },
+  {
+    "id": "E",
+    "naf_code": "E",
+    "name": "Production et distribution d'eau; assainissement, gestion des déchets et dépollution",
+    "description": "Gestion de l'eau, des déchets et dépollution",
+    "level": 1
+  },
+  {
+    "id": "F",
+    "naf_code": "F",
+    "name": "Construction",
+    "description": "Bâtiment, travaux publics, génie civil",
+    "level": 1
+  },
+  {
+    "id": "G",
+    "naf_code": "G",
+    "name": "Commerce; réparation d'automobiles et de motocycles",
+    "description": "Commerce de gros et de détail, réparation de véhicules",
+    "level": 1
+  },
+  {
+    "id": "47",
+    "naf_code": "47",
+    "name": "Commerce de détail",
+    "description": "Vente au détail en magasin",
+    "level": 2,
+    "parent_id": "G"
+  },
+  {
+    "id": "H",
+    "naf_code": "H",
+    "name": "Transports et entreposage",
+    "description": "Transport terrestre, aérien, maritime, entreposage",
+    "level": 1
+  },
+  {
+    "id": "I",
+    "naf_code": "I",
+    "name": "Hébergement et restauration",
+    "description": "Hôtellerie, restauration, traiteurs",
+    "level": 1
+  },
+  {
+    "id": "56",
+    "naf_code": "56",
+    "name": "Restauration",
+    "description": "Activités de restauration",
+    "level": 2,
+    "parent_id": "I"
+  },
+  {
+    "id": "56.10A",
+    "naf_code": "56.10A",
+    "name": "Restauration traditionnelle",
+    "description": "Restaurants avec service à table",
+    "level": 3,
+    "parent_id": "56"
+  },
+  {
+    "id": "56.10B",
+    "naf_code": "56.10B",
+    "name": "Restauration rapide",
+    "description": "Fast-food, cafés, bars",
+    "level": 3,
+    "parent_id": "56"
+  },
+  {
+    "id": "J",
+    "naf_code": "J",
+    "name": "Information et communication",
+    "description": "Services d'information et de communication, édition, télécoms",
+    "level": 1
+  },
+  {
+    "id": "62",
+    "naf_code": "62",
+    "name": "Programmation, conseil et autres activités informatiques",
+    "description": "Programmation, conseil et autres activités informatiques",
+    "level": 2,
+    "parent_id": "J"
+  },
+  {
+    "id": "62.01Z",
+    "naf_code": "62.01Z",
+    "name": "Programmation informatique",
+    "description": "Développement de logiciels et applications",
+    "level": 3,
+    "parent_id": "62"
+  },
+  {
+    "id": "63",
+    "naf_code": "63",
+    "name": "Services d'information",
+    "description": "Traitement de données, hébergement, portails web",
+    "level": 2,
+    "parent_id": "J"
+  },
+  {
+    "id": "63.11Z",
+    "naf_code": "63.11Z",
+    "name": "Traitement de données, hébergement",
+    "description": "Hébergement web, cloud computing",
+    "level": 3,
+    "parent_id": "63"
+  },
+  {
+    "id": "K",
+    "naf_code": "K",
+    "name": "Activités financières et d'assurance",
+    "description": "Banque, assurance, activités financières",
+    "level": 1
+  },
+  {
+    "id": "L",
+    "naf_code": "L",
+    "name": "Activités immobilières",
+    "description": "Achat, vente, location de biens immobiliers",
+    "level": 1
+  },
+  {
+    "id": "M",
+    "naf_code": "M",
+    "name": "Activités spécialisées, scientifiques et techniques",
+    "description": "Conseil, études, recherche, architecture, ingénierie",
+    "level": 1
+  },
+  {
+    "id": "N",
+    "naf_code": "N",
+    "name": "Activités de services administratifs et de soutien",
+    "description": "Location, intérim, sécurité, nettoyage, services aux entreprises",
+    "level": 1
+  },
+  {
+    "id": "O",
+    "naf_code": "O",
+    "name": "Administration publique",
+    "description": "Administration publique, défense, sécurité sociale",
+    "level": 1
+  },
+  {
+    "id": "P",
+    "naf_code": "P",
+    "name": "Enseignement",
+    "description": "Éducation, formation, enseignement",
+    "level": 1
+  },
+  {
+    "id": "Q",
+    "naf_code": "Q",
+    "name": "Santé humaine et action sociale",
+    "description": "Santé, action sociale, médico-social",
+    "level": 1
+  },
+  {
+    "id": "R",
+    "naf_code": "R",
+    "name": "Arts, spectacles et activités récréatives",
+    "description": "Arts, culture, sports, loisirs, jeux",
+    "level": 1
+  },
+  {
+    "id": "S",
+    "naf_code": "S",
+    "name": "Autres activités de services",
+    "description": "Associations, réparation d biens personnels, autres services",
+    "level": 1
+  },
+  {
+    "id": "T",
+    "naf_code": "T",
+    "name": "Activités des ménages en tant qu'employeurs",
+    "description": "Services domestiques, activités des ménages",
+    "level": 1
+  },
+  {
+    "id": "U",
+    "naf_code": "U",
+    "name": "Activités extra-territoriales",
+    "description": "Organisations internationales, représentations diplomatiques",
+    "level": 1
+  }
+]
