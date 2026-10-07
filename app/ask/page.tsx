@@ -7,6 +7,10 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { useI18n } from '@/lib/i18n'
 import { sendChatMessage, transcribeAudio, type ChatMessageResponse, type QueryResult } from '@/lib/api'
+import { sendMockChatMessage } from '@/lib/mockChat'
+
+// Sans backend configuré, le chat répond avec des données factices
+const USE_MOCK_CHAT = !process.env.NEXT_PUBLIC_API_URL
 
 interface Message {
   id: string
@@ -165,7 +169,9 @@ function AskPageInner() {
     setIsLoading(true)
 
     try {
-      const response: ChatMessageResponse = await sendChatMessage(questionText, sessionId)
+      const response: ChatMessageResponse = USE_MOCK_CHAT
+        ? await sendMockChatMessage(questionText, sessionId)
+        : await sendChatMessage(questionText, sessionId)
 
       if (response.session_id) {
         setSessionId(response.session_id)
