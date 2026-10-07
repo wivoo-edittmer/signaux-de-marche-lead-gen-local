@@ -79,21 +79,49 @@ Le projet `insee-api/` existant contient déjà:
 
 ## Phases d'Implémentation
 
+### ⚠️ CONTRAINTES IMPORTANTES
+
+**Le MVP1 doit utiliser UNIQUEMENT les données locales** présentes dans :
+- **Dossier**: `/Users/mathurinbody/Documents/workspaces/wivooxmistral/data/`
+- **Fichiers**: 
+  - `StockUniteLegale_extract_10000.csv` - Unités légales (entreprises, **10K lignes, 1.3MB**)
+  - `StockEtablissement_extract_10000.csv` - Établissements (sites physiques, **10K lignes, 1.9MB**)
+  - `sectors.json` - Secteurs NAF de référence
+  - `zones.json` - Zones géographiques de référence
+  
+  > **✅ Décision MVP1**: Utilisation des fichiers **extract_10000.csv** au lieu des fichiers complets (14.3GB) pour un chargement rapide et une compatibilité avec le Free Tier Supabase.
+
+**Pas d'appel à l'API INSEE** pour le MVP1. L'intégration avec l'API INSEE sera ajoutée dans les phases ultérieures (MVP2+).
+
+**Approche MVP1**:
+1. Utiliser le script `data_loader.py` pour charger les CSV locaux
+2. Créer une API FastAPI qui interroge ces données locales
+3. Utiliser Mistral uniquement pour le NLP (compréhension de la requête, génération de synthèses)
+4. Les statistiques de créations/radiations sont calculées à partir des dates de création dans les CSV
+
+---
+
 ### Phase 0: Recherche et Décisions Techniques
 
 **Objectif**: Résoudre les incertitudes techniques et prendre des décisions éclairées.
 
 **Livrables**:
 - [x] Stack technique définie (voir ci-dessus)
+- [x] Données locales créées (`sectors.json`, `zones.json`, `mock_insee.json`)
 - [ ] `research.md` avec toutes les décisions
-- [ ] Validation des dépendances (API INSEE, Mistral, Supabase)
+- [ ] Validation des dépendances (Mistral, Supabase)
 
 **Tâches**:
-1. **Recherche API INSEE**
-   - Évaluer les endpoints disponibles pour les créations/radiations
-   - Déterminer si on utilise l'API Sirius ou les fichiers Open Data
-   - Évaluer les limites de taux (rate limits)
-   - Proposer une stratégie de cache
+1. **Préparation des données locales** ✅ COMPLET
+   - [x] Créer `sectors.json` avec les secteurs NAF nécessaires
+   - [x] Créer `zones.json` avec les zones géographiques
+   - [x] Créer `mock_insee.json` avec les cas d'usage (banque, éditeur, PME Bretagne)
+   - [x] Valider la structure des données
+
+2. **Recherche Mistral AI**
+   - Tester les modèles pour la compréhension du français
+   - Évaluer les coûts pour un usage intensif
+   - Définir les prompts pour extraction d'entités et génération de synthèses
 
 2. **Recherche Mistral AI**
    - Tester les modèles pour la compréhension du français
@@ -123,38 +151,76 @@ Le projet `insee-api/` existant contient déjà:
 **Objectif**: Définir le modèle de données, les contrats d'interface et les scénarios de validation.
 
 **Livrables**:
-- [ ] `data-model.md` - Modèle de données complet
-- [ ] `/contracts/` - Contrats d'interface (API, Chat, Agents)
-- [ ] `quickstart.md` - Guide de validation rapide
+- [x] `data-model.md` - Modèle de données complet (v2.0 pour MVP1)
+- [x] `/contracts/` - Contrats d'interface (API, Chat)
+- [x] `quickstart.md` - Guide de validation rapide
+- [x] **MVP1 spécifique**: `sql/schema_mvp1.sql` - Schéma SQL adapté aux extract_10000.csv
+- [x] **MVP1 spécifique**: `scripts/data_loader.py` - Script de chargement des données
+- [x] **MVP1 spécifique**: `scripts/README.md` - Instructions détaillées
+- [x] **MVP1 spécifique**: `sectors.json`, `zones.json` - Données de référence
+- [x] **MVP1 spécifique**: `tasks.md` - Suivi des tâches MVP1
+
+### ⚡ État Actuel du MVP1
+
+**📊 Progression: 60% terminés**
+
+| Composant | Statut | Fichiers |
+|-----------|--------|----------|
+| Modèle de données | ✅ COMPLET | `data-model.md` (v2.0) |
+| Schéma SQL | ✅ COMPLET | `insee-api/sql/schema_mvp1.sql` |
+| Script de chargement | ✅ COMPLET | `insee-api/scripts/data_loader.py` |
+| Configuration | ⏳ EN ATTENTE | `.env`, `requirements.txt` |
+| Données Supabase | ❌ À FAIRE | Exécuter le script |
+| Backend FastAPI | ⏳ EN COURS | `insee-api/main.py` (existant) |
+| Frontend Next.js | ❌ À FAIRE | Optionnel pour validation |
+
+**🎯 Prochaine étape immédiate**:
+1. **Configurer Supabase** (5 min)
+2. **Exécuter le schéma SQL** (2 min)
+3. **Charger les données** avec `python scripts/data_loader.py` (30 sec)
+4. **Tester le backend existant** avec les nouvelles données
 
 ---
 
 ### Phase 2: Implémentation (MVPs Incrémentaux)
 
-#### MVP 1: Chat Basique + Synthèse INSEE (2-3 jours)
+#### MVP 1: Chat Basique + Synthèse INSEE (2-3 jours) - **DONNÉES LOCALES UNIQUEMENT**
 
-**Objectif**: Permettre à l'utilisateur de poser des questions et recevoir des synthèses.
+**Objectif**: Permettre à l'utilisateur de poser des questions et recevoir des synthèses **en utilisant uniquement les données locales**.
 
 **Fonctionnalités**:
 - Interface de chat basique (Next.js)
-- Compréhension des requêtes en langage naturel (Mistral)
-- Intégration avec les données INSEE (mock ou API réelle)
-- Génération de synthèses avec chiffres clés
+- Compréhension des requêtes en langage naturel (Mistral ou mock)
+- **Intégration avec les données locales** depuis `/data/StockUniteLegale_utf8.csv` et `/data/StockEtablissement_utf8.csv`
+- Génération de synthèses avec chiffres clés **calculés à partir des données locales**
 - Affichage des résultats dans le chat
 
+**Implémentation Backend**:
+- **Fichier**: `insee-api/main.py` (déjà créé)
+- **Module**: `insee-api/data/data_loader.py` (déjà créé)
+- **Données**: Utilise `sectors.json`, `zones.json`, et les CSV INSEE locaux
+- **Endpoints**: 
+  - `POST /v1/chat/messages` - Chat avec extraction d'entités et génération de synthèses
+  - `POST /v1/searches` - Recherche d'entreprises
+  - `GET /v1/sectors` - Liste des secteurs
+  - `GET /v1/zones` - Liste des zones
+
 **Tâches**:
-1. Créer le projet Next.js avec page de chat
-2. Implémenter le backend FastAPI avec endpoint `/chat`
-3. Intégrer Mistral pour le NLP (Natural Language Processing)
-4. Connecter à l'API INSEE ou utiliser les mocks existants
-5. Générer les synthèses avec Mistral
-6. Afficher les résultats dans l'interface
+1. ✅ **Backend existant**: `insee-api/main.py` avec endpoints de base
+2. ✅ **Data Loader**: `insee-api/data/data_loader.py` pour charger les CSV
+3. ✅ **Données de référence**: `sectors.json` et `zones.json` créés
+4. ⏳ Créer le frontend Next.js avec page de chat
+5. ⏳ Connecter le frontend au backend
+6. ⏳ Tester l'extraction d'entités et la génération de synthèses
+7. ⏳ Valider avec les cas d'usage du README.md
 
 **Critères d'Acceptation**:
-- [ ] L'utilisateur peut poser une question en français
-- [ ] Le système comprend secteur, zone, période
-- [ ] Une synthèse avec chiffres clés est affichée
+- [ ] L'utilisateur peut poser une question en français (ex: "Quelles sont les PME en Bretagne dans le secteur du numérique ?")
+- [ ] Le système extrait correctement secteur, zone, période depuis la requête
+- [ ] Une synthèse avec chiffres clés est générée à partir des données locales
+- [ ] Les chiffres affichés correspondent aux données des CSV
 - [ ] L'interface est responsive (mobile/desktop)
+- [ ] Le backend retourne des données en moins de 5 secondes
 
 ---
 

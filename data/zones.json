@@ -1,0 +1,90 @@
+[
+  {
+    "id": "BRE",
+    "code": "BRE",
+    "name": "Bretagne",
+    "level": "region"
+  },
+  {
+    "id": "29",
+    "code": "29",
+    "name": "Finistère",
+    "level": "department",
+    "parent_id": "BRE"
+  },
+  {
+    "id": "35",
+    "code": "35",
+    "name": "Ille-et-Vilaine",
+    "level": "department",
+    "parent_id": "BRE"
+  },
+  {
+    "id": "22",
+    "code": "22",
+    "name": "Côtes-d'Armor",
+    "level": "department",
+    "parent_id": "BRE"
+  },
+  {
+    "id": "56",
+    "code": "56",
+    "name": "Morbihan",
+    "level": "department",
+    "parent_id": "BRE"
+  },
+  {
+    "id": "35000",
+    "code": "35000",
+    "name": "Rennes",
+    "level": "commune",
+    "parent_id": "35"
+  },
+  {
+    "id": "29201",
+    "code": "29201",
+    "name": "Brest",
+    "level": "commune",
+    "parent_id": "29"
+  },
+  {
+    "id": "69",
+    "code": "69",
+    "name": "Rhône",
+    "level": "department"
+  },
+  {
+    "id": "69001",
+    "code": "69001",
+    "name": "Lyon 1er",
+    "level": "commune",
+    "parent_id": "69"
+  },
+  {
+    "id": "69002",
+    "code": "69002",
+    "name": "Lyon 2ème",
+    "level": "commune",
+    "parent_id": "69"
+  },
+  {
+    "id": "IDF",
+    "code": "IDF",
+    "name": "Île-de-France",
+    "level": "region"
+  },
+  {
+    "id": "75",
+    "code": "75",
+    "name": "Paris",
+    "level": "department",
+    "parent_id": "IDF"
+  },
+  {
+    "id": "75001",
+    "code": "75001",
+    "name": "Paris 1er",
+    "level": "commune",
+    "parent_id": "75"
+  }
+]

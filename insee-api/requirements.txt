@@ -1,0 +1,22 @@
+# B2Bmax MVP1 - Dépendances Python
+
+# Framework Web
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+
+# Base de données PostgreSQL
+psycopg2-binary>=2.9.9
+
+# Pour l'intégration Supabase (optionnel)
+# supabase>=1.0.0
+
+# Pour la validation des modèles
+pydantic>=2.5.0
+
+# Pour le logging
+python-dotenv>=1.0.0
+
+# Pour les tests (optionnel)
+# pytest>=7.4.0
+# pytest-httpx>=0.22.0
+# httpx>=0.25.0

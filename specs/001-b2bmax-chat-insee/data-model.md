@@ -1,100 +1,297 @@
-# Modèle de Données - B2Bmax
+# Modèle de Données - B2Bmax (MVP1)
 
 **Feature**: B2Bmax - Agent Conversationnel de Prospection INSEE  
+**Version**: 2.0 (MVP1 - Données locales extract_10000.csv)  
 **Date**: 2026-10-07  
-**Version**: 1.0
+**Statut**: Adapté pour MVP1 avec fichiers extract_10000.csv
 
 ---
 
-## Entités Principales
+## 📌 Changelog v2.0
 
-### Diagramme Entité-Relation
+### Modifications majeures pour MVP1 :
+- ✅ **Remplacement de `Company`** par `legal_unit` + `establishment` (séparation INSEE)
+- ✅ **Ajout des champs de géolocalisation** (`commune_code`, `postal_code`, `lambert_x/y`)
+- ✅ **Intégration des tables de référence** (`sector`, `zone`, `commune_to_zone`)
+- ✅ **Adaptation pour extract_10000.csv** (10K lignes, ~3.2MB)
+- ✅ **Suppression des tables non-MVP1** (Agent, Contact, Subscription, Notification)
+- ✅ **Simplification des RLS** (pas d'auth pour MVP1)
+
+### Structure adaptée aux données INSEE réelles :
+- **legal_unit** → StockUniteLegale_extract_10000.csv (entreprises)
+- **establishment** → StockEtablissement_extract_10000.csv (sites physiques)
+- **sector** → sectors.json (référence NAF)
+- **zone** → zones.json (référence géographique)
+
+---
+
+## 🏗️ Diagramme Entité-Relation (MVP1)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                                BASE DE DONNÉES                                 │
+│                     MODELE DE DONNÉES MVP1 - B2Bmax                              │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                              │
 │  ┌──────────────┐       ┌──────────────┐       ┌──────────────┐            │
-│  │   User        │       │  Company      │       │   Sector      │            │
+│  │   Sector      │       │    Zone       │       │  User*        │            │
 │  ├──────────────┤       ├──────────────┤       ├──────────────┤            │
-│  │ id (PK)       │◄──────│ sector_id (FK)│──────►│ id (PK)       │            │
-│  │ email         │       │ siren         │       │ naf_code     │            │
-│  │ password_hash │       │ siret         │       │ name         │            │
-│  │ full_name     │       │ name          │       │ description  │            │
-│  │ company_name  │       │ address       │       │ parent_id (FK)│            │
-│  │ role          │       │ city          │       │ created_at   │            │
-│  │ created_at    │       │ postal_code   │       │ updated_at   │            │
-│  │ updated_at    │       │ zone_id (FK)  │       └──────────────┘            │
-│  └──────────────┘       │ date_created  │                              │
-│                           │ date_radiated │                              │
-│                           │ size          │       ┌──────────────┐            │
-│                           │ revenue       │       │   Zone        │            │
-│                           │ created_at    │──────►│ id (PK)       │            │
-│                           │ updated_at    │       │ code          │            │
-│                           └──────────────┘       │ name          │            │
-│                                                    │ level         │            │
-│       ┌──────────────┐       ┌──────────────┐    │ parent_id (FK)│            │
-│       │  Conversation │       │   Message     │    │ created_at    │            │
-│       ├──────────────┤       ├──────────────┤    │ updated_at    │            │
-│       │ id (PK)       │◄──────│ conversation  │    └──────────────┘            │
-│       │ user_id (FK)  │       │ id (PK)       │                              │
-│       │ title         │◄──────│ content       │                              │
-│       │ status        │       │ role          │       ┌──────────────┐    │
-│       │ created_at    │       │ token_count   │       │   Search      │    │
-│       │ updated_at    │       │ created_at    │       ├──────────────┤    │
-│       └──────────────┘       └──────────────┘       │ id (PK)       │    │
-│                                                    │ user_id (FK)  │    │
-│       ┌──────────────┐       ┌──────────────┐       │ query         │    │
-│       │   Agent       │       │  Contact      │       │ sector_id (FK)│    │
-│       ├──────────────┤       ├──────────────┤       │ zone_id (FK)  │    │
-│       │ id (PK)       │◄──────│ agent_id (FK) │       │ period_start  │    │
-│       │ user_id (FK)  │       │ company_id    │       │ period_end    │    │
-│       │ name          │       │ channel       │       │ created_at    │    │
-│       │ description   │       │ message       │       └──────────────┘    │
-│       │ status        │       │ status        │                              │
-│       │ config        │       │ sent_at       │       ┌──────────────┐    │
-│       │ created_at    │       │ responded_at  │       │  Summary      │    │
-│       │ updated_at    │       │ converted     │       ├──────────────┤    │
-│       └──────────────┘       │ created_at    │       │ id (PK)       │    │
-│                           │ updated_at    │──────►│ search_id (FK)│    │
-│                           └──────────────┘       │ total_companies│    │
-│                                                    │ creations     │    │
-│       ┌──────────────┐       ┌──────────────┐       │ radiations    │    │
-│       │ Subscription  │       │ Notification  │       │ net_change    │    │
-│       ├──────────────┤       ├──────────────┤       │ trend         │    │
-│       │ id (PK)       │       │ id (PK)       │       │ insight       │    │
-│       │ user_id (FK)  │       │ user_id (FK)  │       │ subsectors    │    │
-│       │ name          │       │ type          │       │ created_at    │    │
-│       │ frequency     │       │ content       │       └──────────────┘    │
-│       │ content       │       │ status        │                              │
-│       │ format        │       │ company_id    │                              │
-│       │ recipients    │       │ created_at    │                              │
-│       │ status        │       │ updated_at    │                              │
-│       │ created_at    │       └──────────────┘                              │
-│       │ updated_at    │                                                      │
-│       └──────────────┘                                                      │
-│                                                                              │
+│  │ id (PK)       │       │ id (PK)       │       │ id (PK)       │            │
+│  │ naf_code     │       │ code          │       │ email         │            │
+│  │ name         │       │ name          │       │ full_name     │            │
+│  │ level        │       │ level         │       │ role          │            │
+│  │ parent_id(FK)│       │ parent_id(FK) │       └──────────────┘            │
+│  └──────┬───────┘       └──────┬───────┘                  │                │
+│         │                      │                         │                │
+│         │       ┌──────────────┴──────────────┐          │                │
+│         │       │    commune_to_zone            │          │                │
+│         │       │┌──────────┐┌────────────┐│          │                │
+│         │       ││commune_  ││ zone_id (FK)││          │                │
+│         │       ││code (PK) │└────────────┘│          │                │
+│         │       └──────────┘               │          │                │
+│         │              │                   │          │                │
+│         ▼              ▼                   ▼          │                │
+│  ┌──────────────┐       ┌──────────────┐            │                │
+│  │ legal_unit   │       │ establishment │            │                │
+│  ├──────────────┤       ├──────────────┤            │                │
+│  │ id (PK)       │◄──────│ legal_unit_   │            │                │
+│  │ siren (UQ)    │◄──────│ siren (FK)    │            │                │
+│  │ name          │       │ siret (UQ)    │            │                │
+│  │ category      │       │ nic           │            │                │
+│  │ main_activity_│──────►│ zone_id (FK)  │            │                │
+│  │ code          │       │ commune_code │            │                │
+│  │ is_active     │       │ postal_code  │            │                │
+│  │ creation_date │       │ address      │            │                │
+│  └──────────────┘       │ is_active     │            │                │
+│                          │ lambert_x     │            │                │
+│                          │ lambert_y     │            │                │
+│                          └──────────────┘            │                │
+│                                                                    │                │
+│       ┌──────────────┐       ┌──────────────┐                   │                │
+│       │  Conversation │       │   Message     │                   │                │
+│       ├──────────────┤       ├──────────────┤                   │                │
+│       │ id (PK)       │◄──────│ conversation  │                   │                │
+│       │ user_id (FK)* │       │ id (PK)       │                   │                │
+│       │ context       │◄──────│ content       │                   │                │
+│       │ created_at    │       │ role          │                   │                │
+│       └──────────────┘       │ created_at    │                   │                │
+│                            └──────────────┘                   │                │
+│                                                                    │                │
+│       ┌──────────────┐       ┌──────────────┐                   │                │
+│       │   Search      │       │   Summary     │                   │                │
+│       ├──────────────┤       ├──────────────┤                   │                │
+│       │ id (PK)       │◄──────│ search_id     │                   │                │
+│       │ query         │       │ total_companies│                  │                │
+│       │ sector_id(FK) │       │ creations    │                   │                │
+│       │ zone_id(FK)   │       │ radiations   │                   │                │
+│       │ parameters    │       │ insight      │                   │                │
+│       └──────────────┘       └──────────────┘                   │                │
+│                                                                    │                │
 └─────────────────────────────────────────────────────────────────────────────┘
+
+*Note: Les tables marquées avec * (User, Conversation, Message, Search, Summary) 
+sont optionnelles pour MVP1 et peuvent être implémentées avec ou sans Supabase.
+Pour MVP1, on peut utiliser uniquement les données locales sans persistance utilisateur.
 ```
 
 ---
 
-## Schéma Détaillé
+## 📊 Entités Principales (MVP1)
 
-### 1. User (Utilisateur)
-
-**Description**: Représente un professionnel utilisateur de B2Bmax.
+### 1️⃣ **Sector** (Secteur NAF) - Données de référence
+**Source**: `data/sectors.json`
 
 | Champ | Type | Nullable | Default | Description |
 |-------|------|----------|---------|-------------|
 | id | UUID | NO | gen_random_uuid() | Identifiant unique |
+| naf_code | VARCHAR(10) | NO | - | Code NAF (ex: "62.01Z") |
+| name | VARCHAR(255) | NO | - | Nom du secteur |
+| description | TEXT | YES | NULL | Description détaillée |
+| level | INTEGER | NO | - | Niveau hiérarchique (1, 2, 3) |
+| parent_id | UUID | YES | NULL | Secteur parent (NULL pour niveau 1) |
+| created_at | TIMESTAMPTZ | NO | NOW() | Date de création |
+
+**Index**:
+- PRIMARY KEY: id
+- UNIQUE: naf_code
+- INDEX: parent_id
+- INDEX: level
+
+**Contraintes**:
+- parent_id REFERENCES sector(id) ON DELETE SET NULL
+
+**Exemple de données** (à partir de sectors.json):
+```json
+{
+  "naf_code": "J",
+  "name": "Information et communication",
+  "level": 1
+}
+{
+  "naf_code": "62",
+  "name": "Programmation et conseil informatique",
+  "level": 2,
+  "parent_id": "J"
+}
+```
+
+---
+
+### 2️⃣ **Zone** (Zone Géographique) - Données de référence
+**Source**: `data/zones.json`
+
+| Champ | Type | Nullable | Default | Description |
+|-------|------|----------|---------|-------------|
+| id | UUID | NO | gen_random_uuid() | Identifiant unique |
+| code | VARCHAR(10) | NO | - | Code géographique (ex: "BRE", "35", "35000") |
+| name | VARCHAR(255) | NO | - | Nom de la zone |
+| level | VARCHAR(20) | NO | - | Niveau: 'region', 'department', 'commune' |
+| parent_id | UUID | YES | NULL | Zone parente (NULL pour les régions) |
+| insee_code | VARCHAR(10) | YES | NULL | Code INSEE (pour les communes) |
+| created_at | TIMESTAMPTZ | NO | NOW() | Date de création |
+
+**Index**:
+- PRIMARY KEY: id
+- UNIQUE: code
+- INDEX: parent_id
+- INDEX: level
+- UNIQUE: insee_code
+
+**Contraintes**:
+- parent_id REFERENCES zone(id) ON DELETE SET NULL
+
+**Exemple de données** (à partir de zones.json):
+```json
+{
+  "code": "BRE",
+  "name": "Bretagne",
+  "level": "region"
+}
+{
+  "code": "35",
+  "name": "Ille-et-Vilaine",
+  "level": "department",
+  "parent_id": "BRE"
+}
+{
+  "code": "35000",
+  "name": "Rennes",
+  "level": "commune",
+  "parent_id": "35",
+  "insee_code": "35000"
+}
+```
+
+---
+
+### 3️⃣ **commune_to_zone** (Mapping Commune → Zone)
+**Source**: Calculé à partir de zones.json
+
+| Champ | Type | Nullable | Default | Description |
+|-------|------|----------|---------|-------------|
+| commune_code | VARCHAR(10) | NO | - | Code commune INSEE (5 chiffres) |
+| zone_id | UUID | NO | - | ID de la zone correspondante |
+
+**Index**:
+- PRIMARY KEY: commune_code
+- INDEX: zone_id
+
+**Contraintes**:
+- zone_id REFERENCES zone(id) ON DELETE CASCADE
+
+---
+
+### 4️⃣ **legal_unit** (Unité Légale = Entreprise)
+**Source**: `data/StockUniteLegale_extract_10000.csv`
+
+**Description**: Représente une entreprise (unité légale) du répertoire INSEE. Une entreprise peut avoir plusieurs établissements.
+
+| Champ | Type | Nullable | Default | Description | Source CSV |
+|-------|------|----------|---------|-------------|------------|
+| id | UUID | NO | gen_random_uuid() | Identifiant unique | - |
+| siren | VARCHAR(9) | NO | - | Numéro SIREN (unique, 9 chiffres) | siren |
+| name | VARCHAR(255) | NO | - | Nom de l'entreprise | denominationUniteLegale / nomUniteLegale |
+| legal_form | VARCHAR(100) | YES | NULL | Forme juridique | categorieJuridiqueUniteLegale |
+| category | VARCHAR(50) | YES | NULL | Catégorie: PME, GE, etc. | categorieEntreprise |
+| employee_range | VARCHAR(50) | YES | NULL | Tranche d'effectifs | trancheEffectifsUniteLegale |
+| main_activity_code | VARCHAR(10) | YES | NULL | Code NAF principal | activitePrincipaleUniteLegale |
+| administrative_status | VARCHAR(10) | NO | - | Statut: 'A' (active), 'C' (cessée) | etatAdministratifUniteLegale |
+| creation_date | DATE | YES | NULL | Date de création | dateCreationUniteLegale |
+| radiation_date | DATE | YES | NULL | Date de radiation | dateDernierTraitementUniteLegale |
+| is_active | BOOLEAN | NO | - | Entreprise active ? | Généré (administrative_status = 'A') |
+| nic_siege | VARCHAR(5) | YES | NULL | NIC du siège | nicSiegeUniteLegale |
+| insee_data | JSONB | YES | '{}' | Données brutes INSEE | Tous les champs CSV |
+| created_at | TIMESTAMPTZ | NO | NOW() | Date d'ajout à la base | - |
+
+**Index**:
+- PRIMARY KEY: id
+- UNIQUE: siren
+- INDEX: main_activity_code
+- INDEX: category
+- INDEX: is_active (WHERE is_active = TRUE)
+- INDEX: creation_date
+
+**Contraintes**:
+- is_active est généré: `GENERATED ALWAYS AS (administrative_status = 'A') STORED`
+
+---
+
+### 5️⃣ **establishment** (Établissement = Site physique)
+**Source**: `data/StockEtablissement_extract_10000.csv`
+
+**Description**: Représente un établissement (site physique) d'une entreprise. Une entreprise (legal_unit) peut avoir plusieurs établissements.
+
+| Champ | Type | Nullable | Default | Description | Source CSV |
+|-------|------|----------|---------|-------------|------------|
+| id | UUID | NO | gen_random_uuid() | Identifiant unique | - |
+| siret | VARCHAR(14) | NO | - | Numéro SIRET (unique, 14 chiffres = SIREN + NIC) | siret |
+| legal_unit_siren | VARCHAR(9) | NO | - | SIREN de l'unité légale | siren |
+| nic | VARCHAR(5) | NO | - | NIC (5 chiffres) | nic |
+| is_headquarters | BOOLEAN | YES | NULL | Est le siège social ? | etablissementSiege |
+| postal_code | VARCHAR(10) | YES | NULL | Code postal | codePostalEtablissement |
+| commune_name | VARCHAR(100) | YES | NULL | Nom de la commune | libelleCommuneEtablissement |
+| commune_code | VARCHAR(10) | YES | NULL | Code commune INSEE (5 chiffres) | codeCommuneEtablissement |
+| zone_id | UUID | YES | NULL | ID de la zone géographique | Via commune_to_zone |
+| lambert_x | FLOAT | YES | NULL | Coordonnée Lambert X | coordonneeLambertAbscisseEtablissement |
+| lambert_y | FLOAT | YES | NULL | Coordonnée Lambert Y | coordonneeLambertOrdonneeEtablissement |
+| activity_code | VARCHAR(10) | YES | NULL | Code NAF de l'établissement | activitePrincipaleEtablissement |
+| naf25_code | VARCHAR(10) | YES | NULL | Code NAF version 25 | activitePrincipaleNAF25Etablissement |
+| administrative_status | VARCHAR(10) | YES | NULL | Statut administratif | etatAdministratifEtablissement |
+| is_employer | BOOLEAN | YES | NULL | Est employeur ? | caractereEmployeurEtablissement |
+| start_date | DATE | YES | NULL | Date de début | dateDebut |
+| address | TEXT | YES | NULL | Adresse complète | Construite à partir des champs voie, numéro, etc. |
+| created_at | TIMESTAMPTZ | NO | NOW() | Date d'ajout à la base | - |
+
+**Index**:
+- PRIMARY KEY: id
+- UNIQUE: siret
+- INDEX: legal_unit_siren (FK)
+- INDEX: commune_code
+- INDEX: zone_id
+- INDEX: postal_code
+- INDEX: is_active (WHERE is_active = TRUE)
+- INDEX: (legal_unit_siren, commune_code)
+
+**Contraintes**:
+- legal_unit_siren REFERENCES legal_unit(siren) ON DELETE CASCADE
+- zone_id REFERENCES zone(id) ON DELETE SET NULL
+
+---
+
+## 🔄 **Tables Optionnelles pour MVP1+**
+
+> ⚠️ **Ces tables ne sont pas nécessaires pour le MVP1** (qui utilise uniquement les données locales).
+> Elles sont incluses pour référence et seront implémentées dans les MVP suivants.
+
+### 6️⃣ **User** (Utilisateur) - *Optionnel MVP1*
+**Source**: Authentification Supabase (si activée)
+
+| Champ | Type | Nullable | Default | Description |
+|-------|------|----------|---------|-------------|
+| id | UUID | NO | gen_random_uuid() | Identifiant unique (auth.uid()) |
 | email | VARCHAR(255) | NO | - | Email de l'utilisateur (unique) |
-| password_hash | VARCHAR(255) | YES | NULL | Hash du mot de passe |
 | full_name | VARCHAR(255) | YES | NULL | Nom complet |
 | company_name | VARCHAR(255) | YES | NULL | Nom de l'entreprise de l'utilisateur |
 | role | VARCHAR(50) | NO | 'user' | Rôle: user, admin |
-| avatar_url | VARCHAR(500) | YES | NULL | URL de l'avatar |
 | preferences | JSONB | YES | '{}' | Préférences utilisateur |
 | created_at | TIMESTAMPTZ | NO | NOW() | Date de création |
 | updated_at | TIMESTAMPTZ | NO | NOW() | Date de mise à jour |
@@ -103,178 +300,25 @@
 - PRIMARY KEY: id
 - UNIQUE: email
 
-**RLS (Row-Level Security)**:
-- Les utilisateurs ne peuvent accéder qu'à leurs propres données
+**RLS** (si Supabase Auth activé):
+```sql
+CREATE POLICY "Enable read access for authenticated users" ON "user"
+  FOR SELECT USING (auth.uid() = id);
+
+CREATE POLICY "Enable insert for authenticated users" ON "user"
+  FOR INSERT WITH CHECK (auth.uid() = id);
+```
 
 ---
 
-### 2. Sector (Secteur)
-
-**Description**: Représente un secteur d'activité (code NAF).
+### 7️⃣ **Conversation** (Conversation Chat) - *Optionnel MVP1*
 
 | Champ | Type | Nullable | Default | Description |
 |-------|------|----------|---------|-------------|
 | id | UUID | NO | gen_random_uuid() | Identifiant unique |
-| naf_code | VARCHAR(10) | YES | NULL | Code NAF (ex: "56" pour restauration) |
-| name | VARCHAR(255) | NO | - | Nom du secteur |
-| description | TEXT | YES | NULL | Description détaillée |
-| parent_id | UUID | YES | NULL | Secteur parent (pour hiérarchie) |
-| level | INTEGER | NO | 1 | Niveau dans la hiérarchie (1, 2, 3) |
-| created_at | TIMESTAMPTZ | NO | NOW() | Date de création |
-| updated_at | TIMESTAMPTZ | NO | NOW() | Date de mise à jour |
-
-**Index**:
-- PRIMARY KEY: id
-- INDEX: naf_code (UNIQUE)
-- INDEX: parent_id
-
-**Contraintes**:
-- parent_id REFERENCES Sector(id) ON DELETE SET NULL
-
----
-
-### 3. Zone (Zone Géographique)
-
-**Description**: Représente une zone géographique (région, département, commune).
-
-| Champ | Type | Nullable | Default | Description |
-|-------|------|----------|---------|-------------|
-| id | UUID | NO | gen_random_uuid() | Identifiant unique |
-| code | VARCHAR(10) | YES | NULL | Code géographique (ex: "69" pour Rhône, "69001" pour Lyon) |
-| name | VARCHAR(255) | NO | - | Nom de la zone |
-| level | VARCHAR(20) | NO | - | Niveau: region, department, commune |
-| parent_id | UUID | YES | NULL | Zone parente |
-| insee_code | VARCHAR(10) | YES | NULL | Code INSEE |
-| created_at | TIMESTAMPTZ | NO | NOW() | Date de création |
-| updated_at | TIMESTAMPTZ | NO | NOW() | Date de mise à jour |
-
-**Index**:
-- PRIMARY KEY: id
-- INDEX: code (UNIQUE)
-- INDEX: parent_id
-- INDEX: level
-- INDEX: insee_code (UNIQUE)
-
-**Contraintes**:
-- parent_id REFERENCES Zone(id) ON DELETE SET NULL
-
----
-
-### 4. Company (Entreprise)
-
-**Description**: Représente une entreprise du répertoire INSEE.
-
-| Champ | Type | Nullable | Default | Description |
-|-------|------|----------|---------|-------------|
-| id | UUID | NO | gen_random_uuid() | Identifiant unique |
-| siren | VARCHAR(9) | NO | - | Numéro SIREN (unique) |
-| siret | VARCHAR(14) | YES | NULL | Numéro SIRET de l'établissement principal |
-| name | VARCHAR(255) | NO | - | Nom de l'entreprise |
-| legal_form | VARCHAR(100) | YES | NULL | Forme juridique |
-| address | TEXT | YES | NULL | Adresse complète |
-| city | VARCHAR(100) | YES | NULL | Ville |
-| postal_code | VARCHAR(10) | YES | NULL | Code postal |
-| sector_id | UUID | YES | NULL | Secteur d'activité |
-| zone_id | UUID | YES | NULL | Zone géographique |
-| date_created | DATE | YES | NULL | Date de création |
-| date_radiated | DATE | YES | NULL | Date de radiation (NULL si active) |
-| size | VARCHAR(50) | YES | NULL | Taille: micro, small, medium, large |
-| revenue_range | VARCHAR(50) | YES | NULL | Tranche de CA |
-| employee_range | VARCHAR(50) | YES | NULL | Tranche d'effectifs |
-| is_active | BOOLEAN | NO | TRUE | Entreprise active ? |
-| insee_data | JSONB | YES | '{}' | Données brutes INSEE |
-| created_at | TIMESTAMPTZ | NO | NOW() | Date d'ajout à la base |
-| updated_at | TIMESTAMPTZ | NO | NOW() | Date de mise à jour |
-
-**Index**:
-- PRIMARY KEY: id
-- UNIQUE: siren
-- INDEX: sector_id
-- INDEX: zone_id
-- INDEX: date_created
-- INDEX: date_radiated
-- INDEX: is_active
-- INDEX: (sector_id, zone_id)
-
-**Contraintes**:
-- sector_id REFERENCES Sector(id) ON DELETE SET NULL
-- zone_id REFERENCES Zone(id) ON DELETE SET NULL
-
----
-
-### 5. Search (Recherche)
-
-**Description**: Représente une recherche effectuée par un utilisateur.
-
-| Champ | Type | Nullable | Default | Description |
-|-------|------|----------|---------|-------------|
-| id | UUID | NO | gen_random_uuid() | Identifiant unique |
-| user_id | UUID | NO | - | Utilisateur qui a effectué la recherche |
-| query | TEXT | NO | - | Requête en langage naturel |
-| sector_id | UUID | YES | NULL | Secteur recherché |
-| zone_id | UUID | YES | NULL | Zone géographique |
-| period_start | DATE | YES | NULL | Date de début de période |
-| period_end | DATE | YES | NULL | Date de fin de période |
-| parameters | JSONB | YES | '{}' | Paramètres supplémentaires |
-| status | VARCHAR(20) | NO | 'pending' | Statut: pending, processing, completed, failed |
-| created_at | TIMESTAMPTZ | NO | NOW() | Date de création |
-| updated_at | TIMESTAMPTZ | NO | NOW() | Date de mise à jour |
-
-**Index**:
-- PRIMARY KEY: id
-- INDEX: user_id
-- INDEX: sector_id
-- INDEX: zone_id
-- INDEX: created_at
-- INDEX: status
-
-**Contraintes**:
-- user_id REFERENCES User(id) ON DELETE CASCADE
-- sector_id REFERENCES Sector(id) ON DELETE SET NULL
-- zone_id REFERENCES Zone(id) ON DELETE SET NULL
-
----
-
-### 6. Summary (Synthèse)
-
-**Description**: Représente une synthèse générée pour une recherche.
-
-| Champ | Type | Nullable | Default | Description |
-|-------|------|----------|---------|-------------|
-| id | UUID | NO | gen_random_uuid() | Identifiant unique |
-| search_id | UUID | NO | - | Recherche associée |
-| total_companies | INTEGER | NO | 0 | Nombre total d'entreprises |
-| creations | INTEGER | NO | 0 | Nombre de créations |
-| radiations | INTEGER | NO | 0 | Nombre de radiations |
-| net_change | INTEGER | NO | 0 | Variation nette |
-| trend | VARCHAR(20) | YES | NULL | Tendance: growth, decline, stable |
-| insight | TEXT | YES | NULL | Synthèse en langage naturel |
-| subsectors | JSONB | YES | '[]' | Répartition par sous-secteurs |
-| top_companies | JSONB | YES | '[]' | Top entreprises (id, nom, etc.) |
-| metadata | JSONB | YES | '{}' | Métadonnées supplémentaires |
-| created_at | TIMESTAMPTZ | NO | NOW() | Date de création |
-
-**Index**:
-- PRIMARY KEY: id
-- UNIQUE: search_id
-- INDEX: created_at
-
-**Contraintes**:
-- search_id REFERENCES Search(id) ON DELETE CASCADE
-
----
-
-### 7. Conversation (Conversation)
-
-**Description**: Représente une session de chat entre un utilisateur et l'agent.
-
-| Champ | Type | Nullable | Default | Description |
-|-------|------|----------|---------|-------------|
-| id | UUID | NO | gen_random_uuid() | Identifiant unique |
-| user_id | UUID | NO | - | Utilisateur |
-| title | VARCHAR(255) | YES | NULL | Titre de la conversation |
-| context | JSONB | YES | '{}' | Contexte de la conversation (secteur, zone, etc.) |
-| status | VARCHAR(20) | NO | 'active' | Statut: active, archived, deleted |
+| user_id | UUID | YES | NULL | Utilisateur (NULL si pas d'auth) |
+| context | JSONB | YES | '{}' | Contexte de la conversation |
+| status | VARCHAR(20) | NO | 'active' | Statut: active, archived |
 | created_at | TIMESTAMPTZ | NO | NOW() | Date de création |
 | updated_at | TIMESTAMPTZ | NO | NOW() | Date de mise à jour |
 
@@ -284,25 +328,18 @@
 - INDEX: status
 - INDEX: created_at
 
-**Contraintes**:
-- user_id REFERENCES User(id) ON DELETE CASCADE
-
 ---
 
-### 8. Message (Message)
-
-**Description**: Représente un message dans une conversation.
+### 8️⃣ **Message** (Message Chat) - *Optionnel MVP1*
 
 | Champ | Type | Nullable | Default | Description |
 |-------|------|----------|---------|-------------|
 | id | UUID | NO | gen_random_uuid() | Identifiant unique |
-| conversation_id | UUID | NO | - | Conversation |
+| conversation_id | UUID | YES | NULL | Conversation (NULL si standalone) |
 | content | TEXT | NO | - | Contenu du message |
 | role | VARCHAR(20) | NO | - | Rôle: user, assistant, system |
-| token_count | INTEGER | YES | NULL | Nombre de tokens (pour suivi des coûts) |
+| token_count | INTEGER | YES | NULL | Nombre de tokens |
 | model_used | VARCHAR(50) | YES | NULL | Modèle Mistral utilisé |
-| temperature | FLOAT | YES | NULL | Température utilisée pour la génération |
-| metadata | JSONB | YES | '{}' | Métadonnées |
 | created_at | TIMESTAMPTZ | NO | NOW() | Date de création |
 
 **Index**:
@@ -310,345 +347,344 @@
 - INDEX: conversation_id
 - INDEX: created_at
 
-**Contraintes**:
-- conversation_id REFERENCES Conversation(id) ON DELETE CASCADE
-
 ---
 
-### 9. Agent (Agent de Prospection)
-
-**Description**: Représente un agent automatisé de prospection.
+### 9️⃣ **Search** (Recherche) - *Optionnel MVP1*
 
 | Champ | Type | Nullable | Default | Description |
 |-------|------|----------|---------|-------------|
 | id | UUID | NO | gen_random_uuid() | Identifiant unique |
-| user_id | UUID | NO | - | Utilisateur propriétaire |
-| name | VARCHAR(255) | NO | - | Nom de l'agent |
-| description | TEXT | YES | NULL | Description |
-| status | VARCHAR(20) | NO | 'draft' | Statut: draft, active, paused, completed |
-| config | JSONB | NO | '{}' | Configuration de l'agent |
+| user_id | UUID | YES | NULL | Utilisateur (NULL si pas d'auth) |
+| query | TEXT | NO | - | Requête en langage naturel |
+| parameters | JSONB | YES | '{}' | Paramètres extraits (secteur, zone, etc.) |
+| status | VARCHAR(20) | NO | 'completed' | Statut |
 | created_at | TIMESTAMPTZ | NO | NOW() | Date de création |
-| updated_at | TIMESTAMPTZ | NO | NOW() | Date de mise à jour |
-
-**Structure de config**:
-```json
-{
-  "target": {
-    "sector_ids": ["uuid", ...],
-    "zone_ids": ["uuid", ...],
-    "size_filter": ["micro", "small", ...],
-    "date_range": {"start": "YYYY-MM-DD", "end": "YYYY-MM-DD"}
-  },
-  "message": {
-    "template": "...",
-    "variables": {"company_name": "{name}", ...}
-  },
-  "channel": "email", // email, linkedin
-  "frequency": {
-    "type": "immediate", // immediate, daily, weekly
-    "max_per_day": 10
-  },
-  "objective": "appointment" // appointment, demo, documentation
-}
-```
 
 **Index**:
 - PRIMARY KEY: id
 - INDEX: user_id
-- INDEX: status
 - INDEX: created_at
-
-**Contraintes**:
-- user_id REFERENCES User(id) ON DELETE CASCADE
 
 ---
 
-### 10. Contact (Contact de Prospection)
-
-**Description**: Représente un contact effectué par un agent de prospection.
+### 🔟 **Summary** (Synthèse) - *Optionnel MVP1*
 
 | Champ | Type | Nullable | Default | Description |
 |-------|------|----------|---------|-------------|
 | id | UUID | NO | gen_random_uuid() | Identifiant unique |
-| agent_id | UUID | NO | - | Agent de prospection |
-| company_id | UUID | NO | - | Entreprise contactée |
-| channel | VARCHAR(20) | NO | - | Canal: email, linkedin, phone |
-| message | TEXT | NO | - | Message envoyé |
-| status | VARCHAR(20) | NO | 'pending' | Statut: pending, sent, delivered, read, responded, converted, failed |
-| sent_at | TIMESTAMPTZ | YES | NULL | Date d'envoi |
-| delivered_at | TIMESTAMPTZ | YES | NULL | Date de livraison |
-| read_at | TIMESTAMPTZ | YES | NULL | Date de lecture |
-| responded_at | TIMESTAMPTZ | YES | NULL | Date de réponse |
-| converted | BOOLEAN | NO | FALSE | Contact converti ? |
-| conversion_value | VARCHAR(100) | YES | NULL | Valeur de la conversion |
-| response | TEXT | YES | NULL | Réponse reçue |
-| metadata | JSONB | YES | '{}' | Métadonnées |
+| search_id | UUID | YES | NULL | Recherche associée (NULL si standalone) |
+| total_companies | INTEGER | NO | 0 | Nombre total d'entreprises |
+| creations | INTEGER | NO | 0 | Nombre de créations |
+| radiations | INTEGER | NO | 0 | Nombre de radiations |
+| net_change | INTEGER | NO | 0 | Variation nette |
+| trend | VARCHAR(20) | YES | NULL | Tendance: growth, decline, stable |
+| insight | TEXT | YES | NULL | Synthèse en langage naturel |
+| sector_breakdown | JSONB | YES | '{}' | Répartition par secteur |
+| zone_breakdown | JSONB | YES | '{}' | Répartition par zone |
+| top_companies | JSONB | YES | '[]' | Top entreprises |
 | created_at | TIMESTAMPTZ | NO | NOW() | Date de création |
-| updated_at | TIMESTAMPTZ | NO | NOW() | Date de mise à jour |
 
 **Index**:
 - PRIMARY KEY: id
-- INDEX: agent_id
-- INDEX: company_id
-- INDEX: status
+- INDEX: search_id
 - INDEX: created_at
-- INDEX: (agent_id, status)
-- INDEX: (user_id, created_at) via JOIN
-
-**Contraintes**:
-- agent_id REFERENCES Agent(id) ON DELETE CASCADE
-- company_id REFERENCES Company(id) ON DELETE SET NULL
 
 ---
 
-### 11. Subscription (Abonnement)
+## 📜 **Script SQL pour MVP1**
 
-**Description**: Représente un abonnement aux rapports périodiques.
-
-| Champ | Type | Nullable | Default | Description |
-|-------|------|----------|---------|-------------|
-| id | UUID | NO | gen_random_uuid() | Identifiant unique |
-| user_id | UUID | NO | - | Utilisateur |
-| name | VARCHAR(255) | NO | - | Nom de l'abonnement |
-| frequency | VARCHAR(20) | NO | 'weekly' | Fréquence: daily, weekly, biweekly, monthly |
-| content | JSONB | NO | '{}' | Contenu du rapport |
-| format | VARCHAR(20) | NO | 'email' | Format: email, pdf |
-| recipients | JSONB | NO | '[]' | Liste des destinataires |
-| status | VARCHAR(20) | NO | 'active' | Statut: active, paused, cancelled |
-| last_sent_at | TIMESTAMPTZ | YES | NULL | Dernier envoi |
-| next_send_at | TIMESTAMPTZ | YES | NULL | Prochain envoi |
-| created_at | TIMESTAMPTZ | NO | NOW() | Date de création |
-| updated_at | TIMESTAMPTZ | NO | NOW() | Date de mise à jour |
-
-**Structure de content**:
-```json
-{
-  "sectors": ["uuid", ...],
-  "zones": ["uuid", ...],
-  "metrics": ["total_companies", "creations", "radiations", "net_change"],
-  "include_top_companies": true,
-  "include_trend_analysis": true
-}
-```
-
-**Index**:
-- PRIMARY KEY: id
-- INDEX: user_id
-- INDEX: status
-- INDEX: next_send_at
-
-**Contraintes**:
-- user_id REFERENCES User(id) ON DELETE CASCADE
-
----
-
-### 12. Notification (Notification)
-
-**Description**: Représente une notification envoyée à un utilisateur.
-
-| Champ | Type | Nullable | Default | Description |
-|-------|------|----------|---------|-------------|
-| id | UUID | NO | gen_random_uuid() | Identifiant unique |
-| user_id | UUID | NO | - | Utilisateur destinataire |
-| type | VARCHAR(50) | NO | - | Type: new_company, report_ready, agent_update, system |
-| title | VARCHAR(255) | NO | - | Titre de la notification |
-| content | TEXT | NO | - | Contenu de la notification |
-| data | JSONB | YES | '{}' | Données associées |
-| status | VARCHAR(20) | NO | 'unread' | Statut: unread, read, archived |
-| company_id | UUID | YES | NULL | Entreprise concernée (pour new_company) |
-| subscription_id | UUID | YES | NULL | Abonnement concerné |
-| agent_id | UUID | YES | NULL | Agent concerné |
-| created_at | TIMESTAMPTZ | NO | NOW() | Date de création |
-| updated_at | TIMESTAMPTZ | NO | NOW() | Date de mise à jour |
-
-**Index**:
-- PRIMARY KEY: id
-- INDEX: user_id
-- INDEX: status
-- INDEX: created_at
-- INDEX: type
-
-**Contraintes**:
-- user_id REFERENCES User(id) ON DELETE CASCADE
-- company_id REFERENCES Company(id) ON DELETE SET NULL
-- subscription_id REFERENCES Subscription(id) ON DELETE SET NULL
-- agent_id REFERENCES Agent(id) ON DELETE SET NULL
-
----
-
-## Règles de Validation
-
-### Règles Métier
-
-1. **User**:
-   - email doit être valide et unique
-   - role doit être dans ['user', 'admin']
-   - password_hash doit être un hash bcrypt valide
-
-2. **Company**:
-   - siren doit être un nombre à 9 chiffres
-   - siret doit être un nombre à 14 chiffres
-   - date_radiated doit être NULL ou postérieure à date_created
-   - Une seule entreprise active par SIREN
-
-3. **Search**:
-   - period_start doit être ≤ period_end
-   - user_id doit correspondre à un utilisateur valide
-
-4. **Agent**:
-   - status doit être dans ['draft', 'active', 'paused', 'completed']
-   - config doit être un JSON valide avec les champs requis
-
-5. **Contact**:
-   - status doit être dans ['pending', 'sent', 'delivered', 'read', 'responded', 'converted', 'failed']
-   - sent_at doit être ≤ delivered_at (si les deux sont définis)
-
-6. **Subscription**:
-   - frequency doit être dans ['daily', 'weekly', 'biweekly', 'monthly']
-   - format doit être dans ['email', 'pdf']
-
-### Règles de Sécurité (RLS)
-
-**Supabase Row-Level Security**:
+### **Fichier: `sql/schema_mvp1.sql`**
 
 ```sql
--- Pour toutes les tables liées aux utilisateurs:
-CREATE POLICY "Enable read access for authenticated users" ON user
-  FOR SELECT USING (auth.uid() = id);
+-- =============================================
+-- SCHEMA MVP1 - B2Bmax
+-- Adapté pour les fichiers extract_10000.csv
+-- =============================================
 
-CREATE POLICY "Enable insert for authenticated users" ON user
-  FOR INSERT WITH CHECK (auth.uid() = id);
+-- Extension UUID
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
--- Exemple pour Conversation:
-CREATE POLICY "Users can access their conversations" ON conversation
-  FOR ALL USING (auth.uid() = user_id);
+-- =============================================
+-- 1. TABLES DE RÉFÉRENCE (STATIQUES)
+-- =============================================
 
--- Exemple pour Agent:
-CREATE POLICY "Users can manage their agents" ON agent
-  FOR ALL USING (auth.uid() = user_id);
+-- Secteurs NAF
+CREATE TABLE IF NOT EXISTS sector (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    naf_code VARCHAR(10) UNIQUE NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    level INTEGER NOT NULL,
+    parent_id UUID REFERENCES sector(id) ON DELETE SET NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
 
--- Pour les données publiques (Sector, Zone, Company):
-CREATE POLICY "Public read access for sectors" ON sector
-  FOR SELECT USING (true);
+-- Zones géographiques
+CREATE TABLE IF NOT EXISTS zone (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    code VARCHAR(10) UNIQUE NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    level VARCHAR(20) NOT NULL CHECK (level IN ('region', 'department', 'commune')),
+    parent_id UUID REFERENCES zone(id) ON DELETE SET NULL,
+    insee_code VARCHAR(10),
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
 
-CREATE POLICY "Public read access for zones" ON zone
-  FOR SELECT USING (true);
+-- Mapping Commune → Zone
+CREATE TABLE IF NOT EXISTS commune_to_zone (
+    commune_code VARCHAR(10) PRIMARY KEY,
+    zone_id UUID NOT NULL REFERENCES zone(id) ON DELETE CASCADE
+);
 
-CREATE POLICY "Public read access for companies" ON company
-  FOR SELECT USING (true);
+-- =============================================
+-- 2. TABLES INSEE (DONNÉES LOCALES)
+-- =============================================
+
+-- Unités Légales (entreprises)
+CREATE TABLE IF NOT EXISTS legal_unit (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    siren VARCHAR(9) UNIQUE NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    legal_form VARCHAR(100),
+    category VARCHAR(50),
+    employee_range VARCHAR(50),
+    main_activity_code VARCHAR(10),
+    administrative_status VARCHAR(10) NOT NULL CHECK (administrative_status IN ('A', 'C')),
+    creation_date DATE,
+    radiation_date DATE,
+    is_active BOOLEAN GENERATED ALWAYS AS (administrative_status = 'A') STORED,
+    nic_siege VARCHAR(5),
+    insee_data JSONB DEFAULT '{}',
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Établissements (sites physiques)
+CREATE TABLE IF NOT EXISTS establishment (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    siret VARCHAR(14) UNIQUE NOT NULL,
+    legal_unit_siren VARCHAR(9) NOT NULL REFERENCES legal_unit(siren) ON DELETE CASCADE,
+    nic VARCHAR(5) NOT NULL,
+    is_headquarters BOOLEAN,
+    postal_code VARCHAR(10),
+    commune_name VARCHAR(100),
+    commune_code VARCHAR(10),
+    zone_id UUID REFERENCES zone(id) ON DELETE SET NULL,
+    lambert_x FLOAT,
+    lambert_y FLOAT,
+    activity_code VARCHAR(10),
+    naf25_code VARCHAR(10),
+    administrative_status VARCHAR(10),
+    is_employer BOOLEAN,
+    start_date DATE,
+    address TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- =============================================
+-- 3. INDEX
+-- =============================================
+
+-- Index pour Sector
+CREATE INDEX IF NOT EXISTS idx_sector_naf_code ON sector(naf_code);
+CREATE INDEX IF NOT EXISTS idx_sector_parent ON sector(parent_id);
+CREATE INDEX IF NOT EXISTS idx_sector_level ON sector(level);
+
+-- Index pour Zone
+CREATE INDEX IF NOT EXISTS idx_zone_code ON zone(code);
+CREATE INDEX IF NOT EXISTS idx_zone_parent ON zone(parent_id);
+CREATE INDEX IF NOT EXISTS idx_zone_level ON zone(level);
+CREATE INDEX IF NOT EXISTS idx_zone_insee_code ON zone(insee_code);
+
+-- Index pour legal_unit
+CREATE INDEX IF NOT EXISTS idx_legal_unit_siren ON legal_unit(siren);
+CREATE INDEX IF NOT EXISTS idx_legal_unit_main_activity ON legal_unit(main_activity_code);
+CREATE INDEX IF NOT EXISTS idx_legal_unit_category ON legal_unit(category);
+CREATE INDEX IF NOT EXISTS idx_legal_unit_active ON legal_unit(is_active) WHERE is_active = TRUE;
+CREATE INDEX IF NOT EXISTS idx_legal_unit_creation_date ON legal_unit(creation_date);
+
+-- Index pour establishment
+CREATE INDEX IF NOT EXISTS idx_establishment_siret ON establishment(siret);
+CREATE INDEX IF NOT EXISTS idx_establishment_legal_unit ON establishment(legal_unit_siren);
+CREATE INDEX IF NOT EXISTS idx_establishment_commune_code ON establishment(commune_code);
+CREATE INDEX IF NOT EXISTS idx_establishment_zone ON establishment(zone_id);
+CREATE INDEX IF NOT EXISTS idx_establishment_postal_code ON establishment(postal_code);
+CREATE INDEX IF NOT EXISTS idx_establishment_active ON establishment(administrative_status) WHERE administrative_status = 'A';
+CREATE INDEX IF NOT EXISTS idx_establishment_geo ON establishment(legal_unit_siren, commune_code);
+
+-- Index pour commune_to_zone
+CREATE INDEX IF NOT EXISTS idx_commune_to_zone_id ON commune_to_zone(zone_id);
+
+-- =============================================
+-- 4. VUES POUR MVP1
+-- =============================================
+
+-- Statistiques par secteur et zone
+CREATE OR REPLACE VIEW company_stats AS
+SELECT 
+    COALESCE(s.naf_code, 'Inconnu') AS sector_code,
+    COALESCE(s.name, 'Inconnu') AS sector_name,
+    COALESCE(z.code, 'Inconnu') AS zone_code,
+    COALESCE(z.name, 'Inconnu') AS zone_name,
+    COALESCE(z.level, 'unknown') AS zone_level,
+    COUNT(DISTINCT lu.siren) AS company_count,
+    COUNT(DISTINCT e.siret) AS establishment_count,
+    COUNT(DISTINCT CASE WHEN lu.is_active THEN lu.siren END) AS active_company_count,
+    COUNT(DISTINCT CASE WHEN e.administrative_status = 'A' THEN e.siret END) AS active_establishment_count
+FROM legal_unit lu
+LEFT JOIN establishment e ON lu.siren = e.legal_unit_siren
+LEFT JOIN sector s ON lu.main_activity_code = s.naf_code
+LEFT JOIN zone z ON e.zone_id = z.id
+GROUP BY s.naf_code, s.name, z.code, z.name, z.level;
+
+-- Entreprises avec leurs informations géographiques
+CREATE OR REPLACE VIEW companies_with_geo AS
+SELECT 
+    lu.siren,
+    lu.name AS company_name,
+    lu.category,
+    lu.employee_range,
+    lu.main_activity_code,
+    s.name AS sector_name,
+    e.postal_code,
+    e.commune_name,
+    e.commune_code,
+    z.code AS zone_code,
+    z.name AS zone_name,
+    z.level AS zone_level,
+    e.address,
+    e.lambert_x,
+    e.lambert_y,
+    lu.is_active,
+    e.is_headquarters,
+    e.is_employer
+FROM legal_unit lu
+LEFT JOIN establishment e ON lu.siren = e.legal_unit_siren
+LEFT JOIN sector s ON lu.main_activity_code = s.naf_code
+LEFT JOIN zone z ON e.zone_id = z.id;
+
+-- Recherche d'entreprises par secteur et zone
+CREATE OR REPLACE VIEW searchable_companies AS
+SELECT 
+    lu.siren,
+    lu.name,
+    lu.category,
+    lu.employee_range,
+    lu.main_activity_code AS sector_code,
+    s.name AS sector_name,
+    e.commune_code,
+    e.postal_code,
+    e.commune_name,
+    z.code AS zone_code,
+    z.name AS zone_name,
+    z.level AS zone_level,
+    e.address,
+    lu.is_active,
+    lu.creation_date,
+    e.start_date AS establishment_start_date
+FROM legal_unit lu
+LEFT JOIN establishment e ON lu.siren = e.legal_unit_siren
+LEFT JOIN sector s ON lu.main_activity_code = s.naf_code
+LEFT JOIN zone z ON e.zone_id = z.id
+WHERE lu.is_active = TRUE AND e.administrative_status = 'A';
 ```
 
----
+-- =============================================
+-- 5. FONCTIONS UTILES
+-- =============================================
 
-## Transitions d'État
+-- Compter les entreprises par secteur dans une zone
+CREATE OR REPLACE FUNCTION count_companies_by_sector(
+    p_zone_code VARCHAR,
+    p_sector_code VARCHAR DEFAULT NULL
+) RETURNS TABLE (
+    sector_code VARCHAR,
+    sector_name VARCHAR,
+    company_count BIGINT,
+    establishment_count BIGINT
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        COALESCE(s.naf_code, 'Inconnu') AS sector_code,
+        COALESCE(s.name, 'Inconnu') AS sector_name,
+        COUNT(DISTINCT lu.siren) AS company_count,
+        COUNT(DISTINCT e.siret) AS establishment_count
+    FROM legal_unit lu
+    LEFT JOIN establishment e ON lu.siren = e.legal_unit_siren
+    LEFT JOIN sector s ON lu.main_activity_code = s.naf_code
+    LEFT JOIN zone z ON e.zone_id = z.id
+    WHERE 
+        (p_sector_code IS NULL OR s.naf_code = p_sector_code OR s.naf_code LIKE p_sector_code || '.%')
+        AND (
+            p_zone_code IS NULL OR 
+            z.code = p_zone_code OR 
+            z.parent_id IN (SELECT id FROM zone WHERE code = p_zone_code)
+        )
+    GROUP BY s.naf_code, s.name;
+END;
+$$ LANGUAGE plpgsql;
 
-### Conversation
+-- Trouver les entreprises dans une zone et un secteur
+CREATE OR REPLACE FUNCTION find_companies(
+    p_zone_codes TEXT[],
+    p_sector_codes TEXT[],
+    p_min_employees VARCHAR DEFAULT NULL,
+    p_max_employees VARCHAR DEFAULT NULL
+) RETURNS TABLE (
+    siren VARCHAR,
+    name VARCHAR,
+    sector_name VARCHAR,
+    zone_name VARCHAR,
+    commune_name VARCHAR,
+    postal_code VARCHAR,
+    employee_range VARCHAR,
+    is_active BOOLEAN
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        lu.siren,
+        lu.name,
+        COALESCE(s.name, 'Inconnu') AS sector_name,
+        COALESCE(z.name, 'Inconnu') AS zone_name,
+        e.commune_name,
+        e.postal_code,
+        lu.employee_range,
+        lu.is_active
+    FROM legal_unit lu
+    LEFT JOIN establishment e ON lu.siren = e.legal_unit_siren
+    LEFT JOIN sector s ON lu.main_activity_code = s.naf_code
+    LEFT JOIN zone z ON e.zone_id = z.id
+    WHERE 
+        (p_sector_codes IS NULL OR s.naf_code = ANY(p_sector_codes) OR lu.main_activity_code = ANY(p_sector_codes))
+        AND (p_zone_codes IS NULL OR z.code = ANY(p_zone_codes))
+        AND (p_min_employees IS NULL OR lu.employee_range >= p_min_employees)
+        AND (p_max_employees IS NULL OR lu.employee_range <= p_max_employees)
+    GROUP BY lu.siren, lu.name, s.name, z.name, e.commune_name, e.postal_code, lu.employee_range, lu.is_active;
+END;
+$$ LANGUAGE plpgsql;
 ```
-┌──────────┐    create    ┌──────────┐
-│  NEW      │────────────►│  ACTIVE  │
-└──────────┘             └──────────┘
-                          │
-                          │ archive
-                          ▼
-                     ┌──────────┐
-                     │ ARCHIVED │
-                     └──────────┘
+
+-- =============================================
+-- 6. POLICIES RLS (Désactivées pour MVP1)
+-- =============================================
+
+-- Pour MVP1, on peut désactiver RLS ou utiliser des politiques permissives
+-- car on utilise uniquement des données publiques INSEE.
+
+-- Si on active RLS:
+-- CREATE POLICY "Public read access for all" ON legal_unit FOR SELECT USING (true);
+-- CREATE POLICY "Public read access for all" ON establishment FOR SELECT USING (true);
+-- CREATE POLICY "Public read access for all" ON sector FOR SELECT USING (true);
+-- CREATE POLICY "Public read access for all" ON zone FOR SELECT USING (true);
 ```
 
-### Search
-```
-┌──────────┐    submit    ┌──────────┐    process    ┌──────────┐
-│ PENDING   │────────────►│PROCESSING│────────────►│ COMPLETED │
-└──────────┘             └──────────┘             └──────────┘
-                          │
-                          │ fail
-                          ▼
-                     ┌──────────┐
-                     │  FAILED  │
-                     └──────────┘
-```
+-- =============================================
+-- INSTRUCTIONS D'EXÉCUTION
+-- =============================================
 
-### Agent
-```
-┌──────────┐    save    ┌──────────┐    activate    ┌──────────┐
-│  DRAFT    │──────────►│  ACTIVE   │◄──────────────│  PAUSED   │
-└──────────┘           └──────────┘               └──────────┘
-                          │
-                          │ complete
-                          ▼
-                     ┌──────────┐
-                     │ COMPLETED│
-                     └──────────┘
-```
+-- 1. Exécuter ce script dans Supabase SQL Editor
+-- 2. Puis exécuter le script data_loader.py pour charger les données
+-- 3. Les vues et fonctions sont automatiquement créées
 
-### Contact
-```
-┌──────────┐    send    ┌──────────┐    deliver    ┌──────────┐
-│ PENDING   │──────────►│   SENT    │────────────►│DELIVERED │
-└──────────┘           └──────────┘             └──────────┘
-                          │                         │
-                          │ fail                    │ read
-                          ▼                         ▼
-                     ┌──────────┐                ┌──────────┐
-                     │  FAILED  │                │   READ   │
-                     └──────────┘                └──────────┘
-                                                │
-                                                │ respond
-                                                ▼
-                                           ┌──────────┐
-                                           │RESPONDED │
-                                           └──────────┘
-                                                │
-                                                │ convert
-                                                ▼
-                                           ┌──────────┐
-                                           │ CONVERTED│
-                                           └──────────┘
-```
-
----
-
-## Scripts de Migration
-
-*À générer lors de l'implémentation*
-
----
-
-## Optimisations
-
-### Index Recommandés
-
-Tous les index primaires et secondaires sont déjà listés dans chaque table.
-
-### Partitions
-
-Pour les tables qui vont croître rapidement:
-- **Message**: Partition par mois (sur created_at)
-- **Contact**: Partition par mois (sur created_at)
-- **Notification**: Partition par mois (sur created_at)
-
-### Cache
-
-Stratégies de cache recommandées:
-- **Sector, Zone**: Cache long (24h) - données statiques
-- **Company**: Cache moyen (1h) - données semi-statiques
-- **Summary**: Cache court (5min) - données générées
-- **Search**: Pas de cache - requêtes spécifiques
-
----
-
-## Notes d'Implémentation
-
-1. **Supabase**: Utiliser le client @supabase/supabase-js pour le frontend et supabase-py pour le backend
-2. **Migrations**: Utiliser l'outil de migration de Supabase ou créer des scripts SQL
-3. **Seed Data**: Pré-remplir les tables Sector et Zone avec les données INSEE
-4. **Performance**: Pour les requêtes complexes, utiliser des vues matérialisées
-5. **Backup**: Configurer des sauvegardes automatiques de la base de données
-
----
-
-## Historique
-
-| Date | Auteur | Changement |
-|------|--------|------------|
-| 2026-10-07 | Mistral Vibe | Création initiale du modèle de données |
+-- Temps estimé: < 1 minute pour le schéma, < 30 secondes pour le chargement
