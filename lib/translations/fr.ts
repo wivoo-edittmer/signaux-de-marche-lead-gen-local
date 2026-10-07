@@ -190,6 +190,15 @@ export const fr: TranslationKeys = {
   // Explore — Map
   explore_map_title: 'Vue Géographique',
   explore_map_no_data: 'Aucune donnée de localisation pour les filtres actuels.',
+  explore_map_view_markers: 'Marqueurs',
+  explore_map_view_heatmap: 'Heatmap IRIS',
+  explore_heatmap_metric_potential: 'Potentiel',
+  explore_heatmap_metric_companies: 'Entreprises',
+  explore_heatmap_metric_creations: 'Créations',
+  explore_heatmap_zoom_in: 'Zoomez pour afficher les IRIS',
+  explore_heatmap_loading: 'Chargement des IRIS…',
+  explore_heatmap_error: 'Impossible de charger les IRIS',
+  explore_heatmap_demo_note: 'Valeurs de démonstration · Contours IRIS © IGN',
 
   // Explore — Periods
   explore_period_q1: 'T1',

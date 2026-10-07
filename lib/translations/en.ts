@@ -188,6 +188,15 @@ export const en = {
   // Explore — Map
   explore_map_title: 'Geographic Overview',
   explore_map_no_data: 'No location data available for current filters.',
+  explore_map_view_markers: 'Markers',
+  explore_map_view_heatmap: 'IRIS heatmap',
+  explore_heatmap_metric_potential: 'Potential',
+  explore_heatmap_metric_companies: 'Companies',
+  explore_heatmap_metric_creations: 'New companies',
+  explore_heatmap_zoom_in: 'Zoom in to display IRIS areas',
+  explore_heatmap_loading: 'Loading IRIS areas…',
+  explore_heatmap_error: 'Could not load IRIS areas',
+  explore_heatmap_demo_note: 'Demo values · IRIS boundaries © IGN',
 
   // Explore — Periods
   explore_period_q1: 'Q1',

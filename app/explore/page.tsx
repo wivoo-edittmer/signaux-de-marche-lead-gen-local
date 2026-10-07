@@ -8,6 +8,7 @@ import ZoneSelector from '@/components/ZoneSelector'
 import SectorSelector from '@/components/SectorSelector'
 import DateRangePicker from '@/components/DateRangePicker'
 import MapView from '@/components/MapView'
+import IrisHeatmap from '@/components/IrisHeatmap'
 import {
   PotentialByZoneChart,
   GrowthTrendChart,
@@ -266,6 +267,7 @@ export default function ExplorePage() {
 
   // View & sort
   const [viewMode, setViewMode] = useState<ViewMode>('signals')
+  const [mapMode, setMapMode] = useState<'markers' | 'heatmap'>('markers')
   const [sortField, setSortField] = useState<SortField>('potential_score')
   const [sortDir, setSortDir] = useState<SortDir>('desc')
 
@@ -1021,10 +1023,31 @@ export default function ExplorePage() {
         )}
 
         {/* Map */}
-        {!isLoading && viewMode === 'signals' && mapMarkers.length > 0 && (
+        {!isLoading && viewMode === 'signals' && (
           <div className="mt-6 bg-white rounded-xl shadow-card p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('explore_map_title')}</h2>
-            <MapView markers={mapMarkers} height="400px" />
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+              <h2 className="text-lg font-semibold text-gray-900">{t('explore_map_title')}</h2>
+              <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
+                {(['markers', 'heatmap'] as const).map((mode) => (
+                  <button
+                    key={mode}
+                    onClick={() => setMapMode(mode)}
+                    className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                      mapMode === mode ? 'bg-white text-brand-primary shadow-sm' : 'text-gray-600 hover:text-gray-900'
+                    }`}
+                  >
+                    {t(mode === 'markers' ? 'explore_map_view_markers' : 'explore_map_view_heatmap')}
+                  </button>
+                ))}
+              </div>
+            </div>
+            {mapMode === 'heatmap' ? (
+              <IrisHeatmap height="500px" />
+            ) : mapMarkers.length > 0 ? (
+              <MapView markers={mapMarkers} height="400px" />
+            ) : (
+              <p className="text-sm text-gray-500">{t('explore_map_no_data')}</p>
+            )}
           </div>
         )}
       </main>
