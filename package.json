@@ -12,23 +12,23 @@
     "test:coverage": "jest --coverage"
   },
   "dependencies": {
+    "@mapbox/mapbox-gl-geocoder": "^5.0.0",
+    "@supabase/supabase-js": "^2.117.3",
+    "@tanstack/react-query": "^5.0.0",
+    "clsx": "^2.1.0",
+    "date-fns": "^2.30.0",
+    "mapbox-gl": "^3.3.0",
     "next": "^14.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "mapbox-gl": "^3.3.0",
-    "@mapbox/mapbox-gl-geocoder": "^5.0.0",
-    "@tanstack/react-query": "^5.0.0",
-    "zustand": "^4.4.7",
-    "date-fns": "^2.30.0",
-    "clsx": "^2.1.0",
     "tailwind-merge": "^2.2.1",
-    "@supabase/supabase-js": "^2.39.0"
+    "zustand": "^4.4.7"
   },
   "devDependencies": {
+    "@types/mapbox-gl": "^3.1.0",
     "@types/node": "^20.11.0",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
-    "@types/mapbox-gl": "^3.1.0",
     "autoprefixer": "^10.4.17",
     "eslint": "^8.56.0",
     "eslint-config-next": "^14.2.0",

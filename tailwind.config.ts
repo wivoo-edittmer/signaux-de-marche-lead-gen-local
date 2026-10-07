@@ -29,6 +29,13 @@ const config: Config = {
           900: '#15803D',
           gradient: 'linear-gradient(135deg, #A3E635 0%, #65C547 25%, #22C55E 75%, #16A34A 100%)',
         },
+        // Warning Colors (Mistral Charter - Yellow/Orange)
+        warning: {
+          50: '#F5D90A',
+          100: '#FAA42B',
+          500: '#FF9E00',
+          700: '#FF7000',
+        },
         // Semantic Colors
         growth: '#16A34A',
         decline: '#FF7000',

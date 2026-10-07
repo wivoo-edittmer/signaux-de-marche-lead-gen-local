@@ -1,7 +1,8 @@
-'use client'
+"use client"
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, Suspense } from 'react'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 
@@ -106,7 +107,7 @@ const mockResponses: Record<string, { message: string; data?: any }> = {
   },
 }
 
-const gradeColors = {
+const gradeColors: Record<string, string> = {
   A: 'bg-success-700',
   B: 'bg-success-500',
   C: 'bg-gray-500',
@@ -114,7 +115,8 @@ const gradeColors = {
   E: 'bg-warning-700',
 }
 
-export default function AskPage() {
+function AskPageInner() {
+  const searchParams = useSearchParams()
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -126,6 +128,7 @@ export default function AskPage() {
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const hasAutoSubmitted = useRef(false)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -170,6 +173,52 @@ export default function AskPage() {
     }, 1000)
   }
 
+  // Auto-submit query from URL search params (e.g. /ask?q=restaurant+trends+in+paris)
+  useEffect(() => {
+    const q = searchParams.get('q')
+    if (q && !hasAutoSubmitted.current) {
+      hasAutoSubmitted.current = true
+      setInput(q)
+      // Trigger submit after state update
+      setTimeout(() => {
+        const userMessage: Message = {
+          id: Date.now().toString(),
+          role: 'user',
+          content: q,
+          timestamp: new Date(),
+        }
+        setMessages((prev) => [...prev, userMessage])
+        setInput('')
+        setIsLoading(true)
+
+        setTimeout(() => {
+          const lowerInput = q.toLowerCase()
+          let response = mockResponses[lowerInput] || mockResponses.help
+
+          if (!mockResponses[lowerInput]) {
+            for (const key of Object.keys(mockResponses)) {
+              if (lowerInput.includes(key.split(' ')[0]) || key.includes(lowerInput.split(' ')[0])) {
+                response = mockResponses[key]
+                break
+              }
+            }
+          }
+
+          const aiMessage: Message = {
+            id: (Date.now() + 1).toString(),
+            role: 'ai',
+            content: response.message,
+            data: response.data,
+            timestamp: new Date(),
+          }
+
+          setMessages((prev) => [...prev, aiMessage])
+          setIsLoading(false)
+        }, 1000)
+      }, 0)
+    }
+  }, [searchParams])
+
   // Auto-scroll to bottom
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -213,7 +262,7 @@ export default function AskPage() {
 
           <div className="flex items-center gap-4 mb-4">
             <div className="text-4xl font-bold text-brand-primary">{data.summary.potentialScore}</div>
-            <span className={`badge ${gradeColors[data.summary.grade]} text-white`}>
+            <span className={`badge ${gradeColors[data.summary.grade as string]} text-white`}>
               Grade {data.summary.grade}
             </span>
             <span className="text-gray-500">{data.summary.growthRate}% growth</span>
@@ -281,7 +330,7 @@ export default function AskPage() {
           <div className="flex items-center gap-6 mb-6">
             <div className="text-center">
               <div className="text-5xl font-bold text-brand-primary">{data.potential}</div>
-              <span className={`badge ${gradeColors[data.grade]} text-white mt-2`}>
+              <span className={`badge ${gradeColors[data.grade as string]} text-white mt-2`}>
                 Grade {data.grade}
               </span>
               <div className="text-sm text-gray-500 mt-1">{data.recommendation}</div>
@@ -538,5 +587,23 @@ export default function AskPage() {
 
       <Footer />
     </div>
+  )
+}
+
+export default function AskPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex items-center justify-center h-[600px]">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-primary"></div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    }>
+      <AskPageInner />
+    </Suspense>
   )
 }

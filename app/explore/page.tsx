@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
@@ -80,7 +80,7 @@ const mockMarketData = [
   },
 ]
 
-const gradeColors = {
+const gradeColors: Record<string, string> = {
   A: 'bg-success-700',
   B: 'bg-success-500',
   C: 'bg-gray-500',
@@ -253,7 +253,7 @@ export default function ExplorePage() {
                           {item.sector}
                         </p>
                       </div>
-                      <span className={`badge ${gradeColors[item.grade]} text-white`}>
+                      <span className={`badge ${gradeColors[item.grade as string]} text-white`}>
                         Grade {item.grade}
                       </span>
                     </div>

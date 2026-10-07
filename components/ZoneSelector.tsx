@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import { useState, useEffect, useRef } from 'react'
 
@@ -48,7 +48,7 @@ export default function ZoneSelector({ value, onChange, zones }: ZoneSelectorPro
         }}
         className="w-full input flex items-center justify-between cursor-pointer"
       >
-        <span className={selectedZone ? '' : 'text-gray-400''>
+        <span className={selectedZone ? '' : 'text-gray-400'}>
           {selectedZone ? `${selectedZone.name} (${selectedZone.type})` : 'Select a zone'}
         </span>
         <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

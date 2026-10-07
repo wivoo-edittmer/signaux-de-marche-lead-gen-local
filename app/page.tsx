@@ -1,16 +1,27 @@
-'use client'
+"use client"
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 
 export default function HomePage() {
   const [isMounted, setIsMounted] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const router = useRouter()
 
   useEffect(() => {
     setIsMounted(true)
   }, [])
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    const query = searchQuery.trim()
+    if (query) {
+      router.push(`/ask?q=${encodeURIComponent(query)}`)
+    }
+  }
 
   if (!isMounted) return null
 
@@ -45,19 +56,132 @@ export default function HomePage() {
               emerging markets and business opportunities across France.
             </p>
             
-            <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-              <Link 
-                href="/explore" 
-                className="btn btn-primary text-lg px-8 py-3.5"
-              >
-                Explore Market Data
-              </Link>
-              <Link 
-                href="/ask" 
-                className="btn btn-outline text-lg px-8 py-3.5"
-              >
-                Ask Specific Question
-              </Link>
+            {/* Search Bar */}
+            <form onSubmit={handleSearch} className="mt-10 max-w-2xl mx-auto">
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Ask about market trends, sectors, or zones..."
+                  className="w-full pl-12 pr-32 py-4 text-lg rounded-2xl border-2 border-gray-200 focus:border-brand-primary focus:outline-none focus:ring-4 focus:ring-brand-primary/10 transition-all shadow-card"
+                />
+                <button
+                  type="submit"
+                  disabled={!searchQuery.trim()}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 btn btn-primary px-6 py-2.5 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Ask AI
+                </button>
+              </div>
+              <p className="mt-3 text-sm text-gray-400">
+                Try: "restaurant trends in Paris" or "software companies in Lyon"
+              </p>
+            </form>
+            
+            {/* Market Insights Box */}
+            <div className="mt-10 max-w-3xl mx-auto">
+              <div className="bg-white rounded-2xl shadow-card border border-gray-100 overflow-hidden text-left">
+                {/* Header */}
+                <div className="bg-gradient-to-r from-brand-primary to-orange-500 px-6 py-3 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+                    <span className="text-white font-semibold text-sm">Live Market Insights</span>
+                  </div>
+                  <span className="text-white/80 text-xs">France · Updated today</span>
+                </div>
+
+                {/* Stats Grid */}
+                <div className="grid grid-cols-3 divide-x divide-gray-100">
+                  <div className="p-5 text-center">
+                    <div className="text-2xl sm:text-3xl font-bold text-gray-900">2.4M</div>
+                    <div className="text-sm text-gray-500 mt-1">Companies Tracked</div>
+                  </div>
+                  <div className="p-5 text-center">
+                    <div className="text-2xl sm:text-3xl font-bold text-success-700">+12.5%</div>
+                    <div className="text-sm text-gray-500 mt-1">YoY Growth</div>
+                  </div>
+                  <div className="p-5 text-center">
+                    <div className="text-2xl sm:text-3xl font-bold text-brand-primary">87<span className="text-lg text-gray-400">/100</span></div>
+                    <div className="text-sm text-gray-500 mt-1">Avg Potential</div>
+                  </div>
+                </div>
+
+                {/* Top Sectors */}
+                <div className="px-6 py-4 border-t border-gray-100">
+                  <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Top Growing Sectors</div>
+                  <div className="flex flex-wrap gap-2">
+                    <span className="inline-flex items-center gap-1.5 bg-success-50 text-success-700 text-sm px-3 py-1.5 rounded-full">
+                      <span className="w-1.5 h-1.5 rounded-full bg-success-500"></span>
+                      Restauration +18.2%
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 bg-success-50 text-success-700 text-sm px-3 py-1.5 rounded-full">
+                      <span className="w-1.5 h-1.5 rounded-full bg-success-500"></span>
+                      Tech / SaaS +15.7%
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 bg-success-50 text-success-700 text-sm px-3 py-1.5 rounded-full">
+                      <span className="w-1.5 h-1.5 rounded-full bg-success-500"></span>
+                      E-commerce +11.3%
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 bg-warning-50 text-warning-700 text-sm px-3 py-1.5 rounded-full">
+                      <span className="w-1.5 h-1.5 rounded-full bg-warning-500"></span>
+                      Retail +5.2%
+                    </span>
+                  </div>
+                </div>
+
+                {/* Hot Zones */}
+                <div className="px-6 py-4 border-t border-gray-100 bg-gray-50/50">
+                  <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Hottest Zones</div>
+                  <div className="flex items-center gap-4">
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-sm font-medium text-gray-700">Paris (75)</span>
+                        <span className="text-sm font-bold text-brand-primary">94</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-1.5">
+                        <div className="bg-brand-primary h-1.5 rounded-full" style={{ width: '94%' }}></div>
+                      </div>
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-sm font-medium text-gray-700">Lyon (69)</span>
+                        <span className="text-sm font-bold text-brand-primary">91</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-1.5">
+                        <div className="bg-brand-primary h-1.5 rounded-full" style={{ width: '91%' }}></div>
+                      </div>
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-sm font-medium text-gray-700">Bordeaux (33)</span>
+                        <span className="text-sm font-bold text-brand-primary">88</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-1.5">
+                        <div className="bg-brand-primary h-1.5 rounded-full" style={{ width: '88%' }}></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* CTA */}
+                <div className="px-6 py-4 border-t border-gray-100">
+                  <Link
+                    href="/explore"
+                    className="btn btn-primary w-full text-center"
+                  >
+                    Explore Full Market Data
+                    <svg className="w-4 h-4 ml-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
         </div>

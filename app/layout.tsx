@@ -1,10 +1,17 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import './globals.css'
+import { Inter, Press_Start_2P } from 'next/font/google'
+import '../styles/globals.css'
+import { RetroModeProvider } from '@/lib/retro-mode'
 
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
+})
+
+const pressStart2P = Press_Start_2P({
+  weight: '400',
+  subsets: ['latin'],
+  variable: '--font-pixel',
 })
 
 export const metadata: Metadata = {
@@ -26,8 +33,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} font-sans antialiased`}>
-        {children}
+      <body className={`${inter.variable} ${pressStart2P.variable} font-sans antialiased`}>
+        <RetroModeProvider>
+          {children}
+        </RetroModeProvider>
       </body>
     </html>
   )
