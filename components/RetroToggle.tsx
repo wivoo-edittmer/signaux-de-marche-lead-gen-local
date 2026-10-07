@@ -18,7 +18,7 @@ export default function RetroToggle() {
       <span className="retro-toggle-icon" aria-hidden="true">
         {isRetro ? (
           // Pixelated "power off" icon
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" shapeRendering="crispEdges">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
             <rect x="9" y="2" width="2" height="8" fill="currentColor" />
             <rect x="5" y="5" width="2" height="2" fill="currentColor" />
             <rect x="7" y="7" width="2" height="2" fill="currentColor" />
@@ -33,9 +33,9 @@ export default function RetroToggle() {
           </svg>
         ) : (
           // Pixelated cassette tape icon — pure 80s
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" shapeRendering="crispEdges">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
             {/* Cassette body */}
-            <rect x="1" y="4" width="18" height="12" fill="currentColor" />
+            <rect x="1" y="4" width="18" height="12" rx="1" fill="currentColor" />
             {/* Top label area cutout */}
             <rect x="3" y="6" width="14" height="3" fill="var(--retro-bg, #fff)" />
             {/* Reel holes */}
